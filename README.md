@@ -119,9 +119,9 @@ We evaluated **GaV** on an industrial benchmark of real-world datasets from Snow
 
 | Configuration | Model | Accuracy | Input Tokens | Output Tokens | Time |
 |:---|:---|:---:|:---:|:---:|:---:|
-| **Vanilla** (Direct Prompt) | qwen-plus | 42.0% | 36k | 1k | 5s |
+| **Vanilla** (Direct Prompt) | qwen-plus | 42.0% | 36k | 2k | 5s |
 | | qwen-plus (thinking) | 53.0% | 46k | 13k | 51s |
-| | qwen3-max | 43.0% | 36k | 0k | 7s |
+| | qwen3-max | 43.0% | 36k | 1k | 7s |
 | **Description Only** (No Verifier) | qwen-plus | 56.0% | 69k | 3k | 20s |
 | | qwen-plus (thinking) | 68.0% | 96k | 48k | 173s |
 | | qwen3-max | 59.0% | 67k | 3k | 34s |
