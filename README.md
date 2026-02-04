@@ -188,7 +188,7 @@ Following the feedback from the ICDE review process, we provide an extended anal
 ### 1. Sensitivity of Verification Rounds (`max_steps`)
 A key hyperparameter in GaV is the maximum number of refinement rounds allowed for the Verifier agent. Our experiments show that this is not a static parameter but depends on two factors: **Model Personality** and **Context Quality**.
 
-* **Model Sensitivity (Skepticism Level):** We observed that "Reasoner" models or those with specific fine-tuning (e.g., Qwen-Thinking) exhibit higher skepticism. They require more iteration steps to accept a hypothesis compared to models like GPT-4o, which tend to converge faster.
+* **Model Sensitivity (Skepticism Level):** We observed that "Reasoner" models or those with specific fine-tuning (e.g., Qwen-Plus Thinking) exhibit higher skepticism. They require more iteration steps to accept a hypothesis compared to models like Qwen-Plus, which tend to converge faster.
 * **Role of Description (The "Warm-Start"):** When the *Description* component is disabled, the initial hypotheses are often generic. This forces the Verifier to reject them frequently, increasing the number of rounds needed to reach a conclusion.
 
 > **Guideline:** This parameter should be tuned based on the backbone. Increase `max_steps` for skeptical models or when operating in "Blind Mode" (no description).
@@ -203,7 +203,7 @@ A key hyperparameter in GaV is the maximum number of refinement rounds allowed f
 The Verifier agent autonomously decides whether a verification task is "Easy" (solvable via metadata/reflection) or "Hard" (requires Python code execution).
 
 * **Behavior of Non-Reasoner Models:** Models like `qwen-plus` (without thinking mode) tend to **underestimate complexity**. They frequently classify ambiguous tasks as "Easy," bypassing the Data Analyst to save tokens. While this reduces cost, it leads to superficial verification and lower accuracy.
-* **Valid "Easy" Cases:** The "Easy" path is legitimate only when the hypothesis is trivial or directly verifiable against the statistical summary provided by the Description agent (e.g., checking value ranges or null counts).
+* **Valid "Easy" Cases:** The "Easy" path is legitimate only when the hypothesis is trivial or directly verifiable against the statistical summary provided by the Description component (e.g., checking value ranges or null counts).
 * **Impact of Description on Complexity:**
     * We observed (as illustrated in *Figure [Placeholder]* below) that the **Description component** plays a fundamental role in this classification.
     * *With Description:* For simple hypotheses, the initial statistical summary is often sufficient proof, allowing the Verifier to correctly choose the "Easy" path (Reflection).
