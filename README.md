@@ -181,6 +181,46 @@ To illustrate the specific contribution of each component, we present a comparis
 
 ---
 
+## 🧠 Architectural Insights & Hyperparameter Analysis
+
+Following the feedback from the ICDE review process, we provide an extended analysis of specific architectural behaviors, hyperparameter sensitivity, and the ablation of the verification components.
+
+### 1. Sensitivity of Verification Rounds (`max_steps`)
+A key hyperparameter in GaV is the maximum number of refinement rounds allowed for the Verifier agent. Our experiments show that this is not a static parameter but depends on two factors: **Model Personality** and **Context Quality**.
+
+* **Model Sensitivity (Skepticism Level):** We observed that "Reasoner" models or those with specific fine-tuning (e.g., Qwen-Thinking) exhibit higher skepticism. They require more iteration steps to accept a hypothesis compared to models like GPT-4o, which tend to converge faster.
+* **Role of Description (The "Warm-Start"):** When the *Description* component is disabled, the initial hypotheses are often generic. This forces the Verifier to reject them frequently, increasing the number of rounds needed to reach a conclusion.
+
+> **Guideline:** This parameter should be tuned based on the backbone. Increase `max_steps` for skeptical models or when operating in "Blind Mode" (no description).
+
+![Placeholder: Chart showing Average Rejection Rate - GPT Family vs Qwen Family]
+*(Figure: Comparative rejection rates showing higher iteration needs for Qwen models)*
+
+![Placeholder: Chart showing Rejection Rate - With Description vs Without Description]
+*(Figure: Impact of description on convergence speed)*
+
+### 2. The "Easy" vs. "Hard" Classification Dilemma
+The Verifier agent autonomously decides whether a verification task is "Easy" (solvable via metadata/reflection) or "Hard" (requires Python code execution).
+
+* **Behavior of Non-Reasoner Models:** Models like `qwen-plus` (without thinking mode) tend to **underestimate complexity**. They frequently classify ambiguous tasks as "Easy," bypassing the Data Analyst to save tokens. While this reduces cost, it leads to superficial verification and lower accuracy.
+* **Valid "Easy" Cases:** The "Easy" path is legitimate only when the hypothesis is trivial or directly verifiable against the statistical summary provided by the Description agent (e.g., checking value ranges or null counts).
+* **Impact of Description on Complexity:**
+    * We observed (as illustrated in *Figure [Placeholder]* below) that the **Description component** plays a fundamental role in this classification.
+    * *With Description:* For simple hypotheses, the initial statistical summary is often sufficient proof, allowing the Verifier to correctly choose the "Easy" path (Reflection).
+    * *Without Description:* In the absence of this context, the Verifier rarely proposes an "Easy" verification. Lacking basic metadata, it is forced to default to "Hard" verification (Code Execution) to gather evidence from scratch, significantly increasing the computational overhead.
+
+![Placeholder: Chart showing Easy/Hard classification ratio - With vs Without Description]
+*(Figure: Analysis of verification complexity classification relative to context availability)*
+
+### 3. Ablation: Why "Reflection" is Not Enough
+We investigated the necessity of the **Data Analyst** (Code Execution) compared to a simple "Reflection" mechanism (LLM self-correction without tools).
+
+* **Reflection (Verifier without Tools):** As established in recent literature, self-reflection helps reduce syntax errors and basic hallucinations. However, our ablation study confirms that for **Data Profiling**, reflection is insufficient. An LLM cannot "think" its way to the truth about a dataset's distribution or hidden constraints.
+* **Execution (Verifier with Data Analyst):** The ability to execute code allows the system to empirically validate specific constraints (e.g., *"Is this truly a Foreign Key?"*, *"Are dates strictly sequential?"*).
+    * *Result:* Disabling the Data Analyst forces the system into a "Reflection-Only" mode, which fails to capture granular semantic details, reverting to the performance levels of the "Description Only" configuration.
+      
+---
+
 ## 🎯 Intended Use
 
 ABCU is intended for evaluating and developing systems that perform:
