@@ -1,0 +1,1072 @@
+[
+  {
+    "dataset_name": "FINANCIAL_CFPB_COMPLAINT",
+    "dataset_description": "Daily-updated consumer complaints about financial products and services, including company responses and complaint details, dating back to December 2011, from the CFPB. The Consumer Financial Protection Bureau (CFPB) publishes the Consumer Complaints Database that provides complaint information for companies by product category, receipt, and company response timeliness by consumer's zip code and state. It serves as a valuable tool for understanding consumer challenges in the financial marketplace and for monitoring how financial institutions address these issues. The data is updated daily and dates back to Dec 1, 2011. Provides a wide format overview of each complaint submitted to the CFPB. The table provides information on each complaint, including the product, issue, associated company, complaint narrative, public response from the company, and complaint submission details.",
+    "labels": [
+    [
+      "COMPLAINT_ID",
+      "Entity or Attribute Meaning",
+      "Acts as the primary key for the dataset. Verified to be a unique identifier for all 50,000 records, ensuring no duplicate complaints exist in the file."
+    ],
+    [
+      "ID_STATE",
+      "Value Representation",
+      "Follows the strict pattern 'geoId/XX', where XX corresponds to a 2-digit numeric code (likely FIPS). This format is verified in 99.4% of the rows."
+    ],
+    [
+      "ID_STATE",
+      "Relational Context",
+      "Functionally dependent on 'STATE' with a 1:1 mapping for standard locations. However, strictly null for special postal codes like 'AA', 'AE', 'AP' (Military) and some territories, creating intentional gaps in the key."
+    ],
+    [
+      "ID_ZIP",
+      "Value Representation",
+      " formatted string strictly following the pattern 'zip/XXXXX', where XXXXX is a 5-digit sequence. Validated in 91.6% of records (likely correlated with non-null ZIP codes)."
+    ],
+    [
+      "ID_ZIP",
+      "Aggregation and Derivation",
+      "Derived directly from the 'ZIP_CODE' column. Verified that for 91.6% of rows, this column is exactly the concatenation of the string 'zip/' and the value in 'ZIP_CODE'."
+    ],
+    [
+      "DATE_RECEIVED",
+      "Temporal Scope",
+      "Represents the initiation date of the complaint. Used as the anchor point for temporal validation against downstream process dates."
+    ],
+    [
+      "DATE_SENT_TO_COMPANY",
+      "Relational Context",
+      "Represents the processing timestamp when the complaint was forwarded. Verified to be greater than or equal to 'DATE_RECEIVED' in 99.8% of cases, ensuring logical chronological order."
+    ],
+    [
+      "TIMELY_RESPONSE",
+      "Value Semantics",
+      "A Boolean flag indicating adherence to SLA (Service Level Agreement). Contains only 'True' or 'False' values, measuring the company's responsiveness."
+    ],
+    [
+      "CONSUMER_COMPLAINT_NARRATIVE",
+      "Value Semantics",
+      "Unstructured text field containing the customer's detailed account. Heavily anonymized: 66% of non-null narratives contain the redaction mask 'XXXX' to hide PII (Personally Identifiable Information)."
+    ],
+    [
+      "SUBMITTED_VIA",
+      "Value Semantics",
+      "Categorical channel of origin dominated by 'Web' (94.4%). The vocabulary is controlled, though trace anomalies like 'Web Referral' (only 6 records) exist, representing rare hybrid submission paths."
+    ],
+    [
+      "TAGS",
+      "Entity or Attribute Meaning",
+      "Sparse classification attribute for vulnerable populations. 94.2% of values are NULL; present values identify specific groups like 'Servicemember' or 'Older American'."
+    ],
+    [
+      "CONSUMER_DISPUTED",
+      "Value Semantics",
+      "Categorical indicator of conflict resolution status. Values include 'Yes', 'No', and missing data (NaN), reflecting the consumer's satisfaction with the company's response."
+    ]
+  ]
+    },
+    {
+    "dataset_name": "BUREAU_OF_LABOR_STATISTICS_EMPLOYMENT_ATTRIBUTES",
+    "dataset_description": "Employment, job openings, labor turnover, and wages tracked across US regions in the LAUS, JOLTS, and SAE reports from the BLS. The US Bureau of Labor Statistics (BLS) produces granular employment reports: Local Area Unemployment Statistics (LAUS) provides monthly and annual employment, unemployment, and labor force data for states and localities; Job Openings and Labor Turnover Survey (JOLTS) covers labor demand and turnover rates, including data on job openings, hires, and separations; and State and Metro Employment (SAE) delivers employment and wage data across various industries at state and metropolitan levels. Provides a wide format breakdown of variables included in the bureau_of_labor_statistics_employment_timeseries table. The BLS report is provided for reference. Additionally, variables are defined by seasonal adjustment, related industry, and size of the establishment referenced.",
+    "labels": [
+    [
+      "VARIABLE",
+      "Entity or Attribute Meaning",
+      "Serves as the rigorous Primary Key for the dataset, uniquely identifying each time series definition. Verified to be 100% unique across all 2303 records."
+    ],
+    [
+      "VARIABLE",
+      "Value Representation",
+      "Formatted as a 'slug' string derived strictly from 'VARIABLE_NAME'. Code analysis confirms that for 100% of rows, this value is exactly 'VARIABLE_NAME' with all spaces replaced by underscores."
+    ],
+    [
+      "VARIABLE_NAME",
+      "Aggregation and Derivation",
+      "Acts as a composite natural language descriptor. It is semantically constructed by concatenating the 'REPORT', 'MEASURE', 'INDUSTRY', 'ESTABLISHMENT_SIZE', 'SEASONALLY_ADJUSTED', 'FREQUENCY', and 'UNIT' attributes, providing a human-readable summary of the row."
+    ],
+    [
+      "SEASONALLY_ADJUSTED",
+      "Value Semantics",
+      "Boolean indicator representing the statistical treatment of the data. Verified to have perfect consistency (100%) with the text description: True values always correlate with 'Seasonally adjusted' and False with 'Not seasonally adjusted' in the 'VARIABLE_NAME'."
+    ],
+    [
+      "ESTABLISHMENT_SIZE",
+      "Relational Context",
+      "Contextual attribute strictly dependent on the 'REPORT' column. Empirical evidence shows it is 100% populated for 'JOLTS' records and 100% NULL for all other report types, indicating a conditional schema constraint."
+    ],
+    [
+      "FREQUENCY",
+      "Temporal Scope",
+      "Defines the periodicity of the time series data. It contains a controlled vocabulary limited to 'Monthly' (61.5%) and 'Annual' (38.5%), dictating the temporal resolution of the associated measurement."
+    ],
+    [
+      "UNIT",
+      "Value Representation",
+      "Specifies the unit of measurement for the observations. Values are categorical codes including 'Employees', 'Percent', 'Level', 'USD', and 'Diffusion Index', determining how the numeric data in the actual time series should be interpreted."
+    ],
+    [
+      "INDUSTRY",
+      "Entity or Attribute Meaning",
+      "Represents the economic sector or sub-sector associated with the metric. It defines the scope of the observation (e.g., 'Total private', 'Construction')."
+    ],
+    [
+      "REPORT",
+      "Entity or Attribute Meaning",
+      "Identifies the source program or bureau survey responsible for the data (e.g., 'JOLTS', 'State and Metro Employment'). This attribute acts as the top-level classifier that determines the availability of other columns like 'ESTABLISHMENT_SIZE'."
+    ]
+  ]
+    },
+    {
+    "dataset_name": "US_DEPARTMENT_OF_TRANSPORTATION_TIMESERIES_PIT",
+    "dataset_description": "Tracks history of the us_department_of_transportation_timeseries table with start and end timestamps to indicate row validity periods. Current rows have a NULL end timestamp. Updated and deleted rows are time-stamped, including deletion time, in Eastern Time with UTC offset.",
+    "labels": [
+    [
+      "FLIGHT_TYPE_ID",
+      "Value Representation",
+      "Represented as a 32-character hexadecimal string (e.g., '1f58695d...'). Verified in 100% of the sample rows to follow the regex pattern '^[a-f0-9]{32}$', serving as a generated unique identifier (hash) for the observation."
+    ],
+    [
+      "ORIGIN_AIRPORT_ID",
+      "Value Representation",
+      "Composite identifier typically formed by a numeric ID followed by a three-character code (e.g., '32211LAS'). While the predominant pattern is '5 digits + 3 uppercase letters', valid variations exist: approximately 0.15% of records use a 4-digit prefix, and roughly 0.25% are irregular deviations (e.g., alphanumeric suffixes like 'T4X'), making the strict 5-digit rule accurate for only 99.6% of the data."
+    ],
+    [
+      "DATE",
+      "Temporal Scope",
+      "Represents the reporting period's end date. Verified in the sample to strictly contain month-end dates (e.g., '2012-02-29', '2023-04-30'), indicating the data is aggregated at a monthly granularity."
+    ],
+    [
+      "VARIABLE",
+      "Entity or Attribute Meaning",
+      "Specifies the metric being measured in the 'VALUE' column. High-cardinality categorical data acting as a key for the pivot structure (e.g., 'DEPARTURES_PERFORMED', 'AVAILABLE_CAPACITY_PAYLOAD_POUNDS')."
+    ],
+    [
+      "VALUE",
+      "Value Representation",
+      "Numeric measurement stored as a floating-point number. Verified to be non-negative in the analyzed sample (min value 0.0), with precision varying based on the corresponding 'UNIT'."
+    ],
+    [
+      "UNIT",
+      "Relational Context",
+      "Functionally dependent on the 'VARIABLE' column. A 1:1 mapping was observed in the sample: 'DEPARTURES_PERFORMED' implies 'Count', 'DISTANCE' implies 'Miles', and 'AIRBORNE_IN_MINUTES' implies 'Minutes'."
+    ],
+    [
+      "SERVICE_CLASS",
+      "Value Semantics",
+      "Categorical description of the flight service type. Values observed include 'Non-Scheduled Civilian Passenger Service' and 'Scheduled All Cargo Service', distinguishing between passenger/cargo and scheduled/non-scheduled operations."
+    ],
+    [
+      "_EFFECTIVE_START_TIMESTAMP",
+      "Temporal Scope",
+      "Defines the start of the validity window for the record (Slowly Changing Dimension Type 2). It contains a timestamp with timezone offset (ISO 8601), indicating when this specific version of the data row became active in the system."
+    ]
+  ]
+    },
+    {
+        "dataset_name":"FDIC_BRANCH_LOCATIONS_INDEX",
+        "dataset_description": "Index of each FDIC banking institutions' branches. The Federal Deposit Insurance Corporation (FDIC) is an independent agency of the US government that insures deposits at banks and thrift institutions, up to an insured limit, and promotes the safety and soundness of these financial institutions by identifying, monitoring, and addressing risks. They monitor financial institutions at 3 levels: (1) holding company, (2) institution, and (3) branch. On an annual basis, they conduct the Summary of Deposits survey that gathers data on the deposits held at each FDIC-insured banks' branches (if the bank has at least one branch). Provides a wide format overview of each banking institutions' branches by FDIC_BRANCH_ID. The table includes an ID and name for each branch and its associated institution and holding company. It also includes branch-specific location information as well as institution-level regulatory and insurance data.",
+        "labels": [
+    [
+      "FDIC_BRANCH_ID",
+      "Entity or Attribute Meaning",
+      "Acts as the primary key for the dataset. Verified to be unique across all records, identifying each specific branch location instance distinct from the institution itself."
+    ],
+    [
+      "FDIC_INSTITUTION_ID",
+      "Relational Context",
+      "Foreign key linking branches to their parent financial institution. While it maintains a strict 1:1 mapping with 'FDIC_INSTITUTION_CERTIFICATE_NUMBER' internally, external integration is complex: approximately 2.4% of IDs link to multiple Federal Reserve identifiers (RSSD), confirming that cross-agency mappings are not always unique due to historical changes."
+    ],
+    [
+      "GEO_ID_STATE",
+      "Value Representation",
+      "Follows the strict pattern 'geoId/XX', where XX is a 2-digit numeric code (likely FIPS state code). This format is verified in 98.9% of the dataset."
+    ],
+    [
+      "GEO_ID_ZIP",
+      "Value Representation",
+      "Formatted string strictly following the pattern 'zip/XXXXX', wrapping the 5-digit ZIP code. Verified in 99.0% of records, serving as a normalized geographic identifier."
+    ],
+    [
+      "MAIN_OFFICE_FLAG",
+      "Value Semantics",
+      "Binary indicator specifying if the location is the institution's headquarters. Contains strictly integer values '0' (Branch) and '1' (Main Office)."
+    ],
+    [
+      "ESTABLISHED_DATE",
+      "Temporal Scope",
+      "Represents the date the branch began operations. Verified to be chronologically consistent (earlier than or equal to 'ACQUIRED_DATE') in 98.4% of cases. However, it functions as an independent temporal anchor and does not strictly predate acquisition in every record."
+    ],
+    [
+      "BRANCH_TYPE",
+      "Value Semantics",
+      "Categorical description of the facility's service level. Analysis reveals a structural hierarchy beyond the single mode: while 'Full Service - Brick And Mortar' is dominant (92.1%), the broader 'Full Service' family accounts for 95.3% of records. The remaining 4.7% are classified as 'Limited Service' (e.g., Drive-Thru, Mobile), providing a more useful segmentation of operational models."
+    ],
+    [
+      "LATITUDE",
+      "Value Representation",
+      "Geographic coordinate measuring north-south position. Values range from approx 5.3 to 158.2, which includes territories outside the continental US (likely Guam/Pacific Islands), requiring global mapping handling."
+    ],
+    [
+      "LONGITUDE",
+      "Value Representation",
+      "Geographic coordinate measuring east-west position. Values range from -166.2 to 163.0, crossing the International Date Line (180/-180), confirming the dataset includes Pacific territories."
+    ],
+    [
+      "INSTITUTION_PRIMARY_REGULATORY_AGENCY",
+      "Entity or Attribute Meaning",
+      "Identifies the federal body responsible for supervising the bank (e.g., 'OCC', 'FDIC', 'FED'). Notably, the value 'OTS' (Office of Thrift Supervision) is an extremely rare anomaly (found in only 3 records), representing stale mappings from a dissolved agency rather than an active regulatory category."
+    ],
+    [
+      "HOLDING_COMPANY_NAME",
+      "Relational Context",
+      "Indicates the parent corporation owning the bank. This field is nullable (missing in ~7.9% of rows), implying that a minority of institutions operate independently without a holding company structure."
+    ],
+    [
+      "INSTITUTION_PRIMARY_ASSET_SPECIALIZATION",
+      "Value Semantics",
+      "Classifies the bank's primary business focus. Categories include 'Mortgage Lending', 'Agricultural', and 'Commercial Lending', defining the economic niche of the institution."
+    ],
+    [
+      "FDIC_CLASSIFICATION_CODE",
+      "Value Representation",
+      "A code used for internal FDIC classification. Despite the name 'Code', analysis shows it is not strictly numeric (contains non-numeric characters or mixed types), requiring string parsing."
+    ],
+    [
+      "INSTITUTION_NAME",
+      "Relational Context",
+      "The legal name of the financial institution. Code analysis reveals a many-to-one relationship with 'FDIC_INSTITUTION_ID' is NOT strictly 1:1 in the reverse direction (Name -> ID is not unique), implying that different institutions (IDs) might share the same name (e.g., generic names like 'First State Bank')."
+    ],
+    [
+      "ACQUIRED_DATE",
+      "Temporal Scope",
+      "Records when a branch was taken over by the current institution. This is a sparse column (mostly NULL), populated only when a transfer of ownership has occurred."
+    ],
+    [
+      "FDIC_INSTITUTION_CERTIFICATE_NUMBER",
+      "Entity or Attribute Meaning",
+      "A unique certification identifier assigned by the FDIC. Verified to map 1:1 to 'FDIC_INSTITUTION_ID', serving as an alternative unique key for the institution entity."
+    ]
+  ]
+    },
+    {
+        "dataset_name":"FEMA_DISASTER_DECLARATION_AREAS_INDEX",
+        "dataset_description": "Federally-declared disasters and their associated geographies (state and county), authorized programs, and recorded timelines, as recorded by FEMA. The Federal Emergency Management Agency (FEMA) provides extensive data on emergency management in the United States. This data encompasses disaster declarations, declared recovery programs, and the National Flood Insurance Program (NFIP) policies and claims. The disaster declaration process involves a collaboration between FEMA and the federal government, where state or tribal governments formally request federal assistance through FEMA after a significant disaster overwhelms their capabilities. Upon receiving the request, FEMA evaluates the situation and advises the President, who then decides whether to declare a federal disaster, enabling the allocation of federal funds and resources to assist in recovery efforts. Provides a wide format breakdown of federally-declared disasters and associated geographies. This includes details on the disaster and authorized programs.",
+        "labels": [
+    [
+      "DISASTER_DECLARATION_RECORD_ID",
+      "Entity or Attribute Meaning",
+      "Acts as the unique primary key for the dataset. Verified to be 100% unique and strictly follows the canonical UUID version 4 format (32 hexadecimal characters with hyphens), identifying a specific declaration event per area."
+    ],
+    [
+      "DISASTER_ID",
+      "Relational Context",
+      "Grouping identifier linking multiple area records to a single disaster event. Code analysis confirms this ID is not unique (found in duplicates), serving as a Foreign Key to the master Disaster table."
+    ],
+    [
+      "STATE_GEO_ID",
+      "Value Representation",
+      "Follows the strict pattern 'geoId/XX', where XX is a 2-digit numeric FIPS state code. Verified in 99.6% of records, serving as a standardized reference for the state entity."
+    ],
+    [
+      "COUNTY_GEO_ID",
+      "Aggregation and Derivation",
+      "Hierarchically derived from 'STATE_GEO_ID'. Code analysis confirms that in 97.2% of cases, the 5-digit sequence in this column (e.g., 'geoId/20083') starts with the 2-digit sequence found in 'STATE_GEO_ID' (e.g., 'geoId/20'), establishing a strict parent-child geographic relationship."
+    ],
+    [
+      "DECLARED_PROGRAMS_DETAILED",
+      "Value Representation",
+      "Serialized JSON array storing a list of assistance programs (e.g., '[\"Public Assistance\", \"Debris Removal\"]'). Verified to contain valid JSON lists in 80.5% of rows, allowing for one-to-many relationship modeling within a single cell."
+    ],
+    [
+      "TRIBAL_REQUEST",
+      "Value Semantics",
+      "Boolean flag indicating if the declaration was initiated by a Tribal Government. Contains strictly 'True' or 'False' values, distinguishing sovereign tribal requests from standard state requests."
+    ],
+    [
+      "DESIGNATED_DATE",
+      "Temporal Scope",
+      "Represents the official start date of the disaster declaration for the specific area. It acts as the anchor timestamp; analysis shows it is strictly earlier than or equal to the 'CLOSEOUT_DATE' in 99.9% of closed cases."
+    ],
+    [
+      "FEMA_DESIGNATED_AREA",
+      "Value Semantics",
+      "Name of the specific administrative zone affected. While predominantly containing '(County)' (87.3%), '(Parish)', and '(Municipio)', the field is a free-text label that also captures a diverse long tail of administrative types including 'Township', 'Borough', 'Indian Reservation', and 'ANV' (Alaska Native Villages). It functions as a descriptive label rather than a standardized geographic code."
+    ],
+    [
+      "FEMA_PLACE_CODE",
+      "Value Representation",
+      "Numeric code used for internal FEMA location tracking. Verified to be strictly numeric (integers stored as generic numbers) in 100% of the sample, distinct from the standard FIPS geoId."
+    ],
+    [
+      "CLOSEOUT_DATE",
+      "Temporal Scope",
+      "Defines the end of the active declaration period. This field is nullable (approx. 41.2% of records are active/open) and, when populated, typically occurs on or after the 'DESIGNATED_DATE' (strict post-dating is the norm, but same-day closeouts exist), marking the administrative conclusion of assistance."
+    ]
+  ]
+    },
+    {
+  "dataset_name": "OPENCELLID__OPEN_DATABASE_OF_CELL_TOWERS",
+  "dataset_description": "OpenCellID is the world's largest open community project that collects GPS positions of cell towers, used for geolocation services. This extract contains cell tower metadata including radio technology, location, and identification codes.",
+  "labels": [
+    [
+      "UPDATED",
+      "Relational Context",
+      "Record-level Unix epoch timestamp (UTC seconds) representing the last modification time. Strictly enforces temporal integrity: verified to be greater than or equal to the 'CREATED' timestamp for 100% of records, ensuring updates never precede creation."
+    ],
+    [
+      "AVERAGESIGNAL",
+      "Value Semantics",
+      "Numeric attribute strictly fixed at the value '0' for 100% of observations. It functions as a universal placeholder indicating the complete absence of signal strength measurements in this dataset snapshot."
+    ],
+    [
+      "RADIO",
+      "Value Semantics",
+      "Categorical indicator of the cellular technology generation (2G=GSM, 3G=UMTS, 4G=LTE, 5G=NR). Validated distribution: 'LTE' (64.4%), 'GSM' (23.2%), 'UMTS' (9.5%), and 'NR' (2.8%)."
+    ],
+    [
+      "CHANGEABLE",
+      "Value Semantics",
+      "Binary flag strictly fixed at the value '1' for 100% of the dataset. Serves as a static metadata flag indicating universal system-level configurability for all records."
+    ],
+    [
+      "UNIT",
+      "Value Representation",
+      "Integer field dominated by sentinel values '-1' (58.3%) and '0' (38.4%), which represent 'Unknown' states. However, the field contains 514 distinct discrete codes, with sparse positive integers serving as specific vendor/technology identifiers."
+    ],
+    [
+      "MCC",
+      "Entity or Attribute Meaning",
+      "Mobile Country Code (ITU-T E.212). Verified values range strictly from 202 to 748, identifying the regulatory jurisdiction of the tower's operation."
+    ],
+    [
+      "LON",
+      "Value Semantics",
+      "Geographical longitude in decimal degrees, spanning Western (-) and Eastern (+) hemispheres. Verified range is [-159.73, 176.92], with 0% of records falling on the 'Null Island' coordinate (0.0, 0.0), indicating high-quality spatial validity."
+    ],
+    [
+      "SAMPLES",
+      "Aggregation and Derivation",
+      "Cumulative count of independent crowdsourced sighting reports (min=1, max=201). It serves as a computed proxy for confidence in the cell's observation history, confirming every record is backed by at least one empirical observation."
+    ]
+  ]
+},
+{
+  "dataset_name": "SEC_FINANCIAL_ANALYTICS_KIT",
+  "dataset_description": "Financial analytics dataset derived from US Securities and Exchange Commission (SEC) filings (Forms 10-K, 10-Q). Contains fundamental accounting metrics, calculated financial ratios, and entity metadata for publicly traded companies, anchored to fiscal reporting periods.",
+  "labels": [
+    [
+      "GROSS_PROFIT",
+      "Aggregation and Derivation",
+      "Strictly calculated as 'NET_SALES' minus 'COST_OF_SALES'. Verified via code to hold exactly for 100% of the 10,930 records, confirming it is a derived accounting figure with no independent variance."
+    ],
+    [
+      "NET_WORKING_CAPITAL",
+      "Aggregation and Derivation",
+      "Represents the liquidity metric calculated as 'TOTAL_CURRENT_ASSETS' minus 'TOTAL_CURRENT_LIABILITIES'. Validated to be accurate in 99.97% of records, with negligible deviations likely due to rounding."
+    ],
+    [
+      "CURRENT_RATIO",
+      "Aggregation and Derivation",
+      "Financial ratio derived as 'TOTAL_CURRENT_ASSETS' divided by 'TOTAL_CURRENT_LIABILITIES'. Code execution confirms this relationship holds for 100% of rows where liabilities are non-zero."
+    ],
+    [
+      "DEBT_RATIO",
+      "Aggregation and Derivation",
+      "Solvency metric calculated strictly as 'TOTAL_LIABILITIES' divided by 'TOTAL_ASSETS'. Verified to match this specific formula in 100% of cases, distinguishing it from other debt ratio definitions (e.g., Debt/Equity)."
+    ],
+    [
+      "STOCK_PRICE_DATE",
+      "Temporal Scope",
+      "Static reference date '2025-12-29' (100% of rows). Indicates a synthetic or projected market snapshot distinct from historical fiscal reporting periods found in the rest of the dataset."
+    ],
+    [
+      "FY",
+      "Temporal Scope",
+      "Fiscal Year integer indicating the reporting year. The distribution is heavily concentrated in 2021-2023, but includes a '0' value in rare cases, indicating potential missing or default data entry."
+    ],
+    [
+      "FP",
+      "Value Semantics",
+      "Categorical indicator for the fiscal reporting period with a closed vocabulary: 'FY', 'Q1', 'Q2', 'Q3'. It defines the report type: 'FY' corresponds to audited annual reports (Form 10-K), while 'Qx' values correspond to unaudited quarterly reports (Form 10-Q)."
+    ],
+    [
+      "SIC",
+      "Entity or Attribute Meaning",
+      "Standard Industrial Classification code (predominantly 4-digit). Observed to vary over time for specific entities, reflecting evolving business focus per filing. Includes a small minority (0.3%) of 3-digit high-level sector codes."
+    ],
+    [
+      "STATE",
+      "Entity or Attribute Meaning",
+      "Geographical location code using standard 2-letter US abbreviations. Note: Reflects historical filing status, not necessarily real-time physical headquarters (e.g., legacy states may persist in data after corporate relocation)."
+    ],
+    [
+      "CIK",
+      "Entity or Attribute Meaning",
+      "Central Index Key, the unique 10-digit identifier assigned by the SEC. It serves as the persistent primary entity key, verified to have a one-to-many relationship with SYMBOL (e.g., multiple share classes for a single CIK)."
+    ],
+    [
+      "FREE_CASH_FLOW",
+      "Value Semantics",
+      "Numeric financial metric characterized by high sparsity (41.4% zero). The prevalence of exact zero values suggests rounding or placeholder reporting conventions rather than precise break-even financial states."
+    ],
+    [
+      "SYMBOL",
+      "Relational Context",
+      "Stock ticker symbol identifying the company. Not unique (duplicates exist). Subject to reuse or variation over time (e.g., mergers, share classes), requiring pairing with CIK for unique entity resolution."
+    ],
+    [
+      "NET_SALES",
+      "Value Semantics",
+      "Primary revenue figure. Includes 0.2% negative values (reflecting returns/adjustments) and 5.9% zero values (reflecting pre-revenue or developmental stage companies), accurately capturing diverse operational states."
+    ]
+  ]
+},
+  {
+  "dataset_name": "EIA_ENERGY_ATTRIBUTES",
+  "dataset_description": "Natural gas, electricity, coal, and petroleum sales, production, consumption, and import/export statistics, provided by the Energy Information Administration (EIA). The Energy Information Administration (EIA) is part of the U.S. Department of Energy and serves as a primary source of data on energy production, consumption, and related topics. Provides a wide format breakdown of variables included in the eia_energy_timeseries table.",
+  "labels": [
+    [
+      "DATASET_NAME",
+      "Value Representation",
+      "Verified to be a valid JSON-formatted string containing dataset identifiers. Unlike the prediction of a fixed 3-segment schema, code execution confirms variable complexity: 5-segment identifiers dominate (78%), followed by 3-segment (19%) and others ranging from 1 to 6 segments."
+    ],
+    [
+      "FREQUENCY",
+      "Temporal Scope",
+      "Closed categorical indicator of the reporting cadence. Verified vocabulary consists exactly of: 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Annual'. It is a structural attribute that qualifies the time index aggregation and participates in the series identity (rows with different FREQUENCY are distinct series)."
+    ],
+    [
+      "ENERGY_TYPE",
+      "Entity or Attribute Meaning",
+      "High-level classification of the energy source. The distribution is explicitly segmented into four categories: 'Electricity' (74.7%), 'Petroleum' (18.5%), 'Coal' (5.7%), and 'Natural Gas' (1.2%), defining the primary domain of each record."
+    ],
+    [
+      "UNIT",
+      "Value Semantics",
+      "Defines the unit of measurement for the 'MEASURE' column. It is highly polymorphic, containing 41 distinct categorical values that span physical units (e.g., 'Million MMBtu'), ratios, and economic metrics (e.g., cost intensities in USD). This variability necessitates strict pairing with the measure column for any numeric analysis to avoid scale or dimensional errors."
+    ],
+    [
+      "GEO_ID",
+      "Entity or Attribute Meaning",
+      "Polymorphic geographical identifier string. Verified to follow a multi-granular hierarchy with 7 distinct schemas, dominated by 'geoId' (57%, FIPS-based), 'censusDivision' (14%), and 'country' codes, plus operational zones like 'padDistrict' and 'ngRegion'."
+    ],
+    [
+      "SECTOR",
+      "Entity or Attribute Meaning",
+      "Categorical description of the economic or functional context (e.g., 'Electric Power', 'Industrial CHP'), distinguishing between aggregated totals and granular operational sub-sectors. Note that 25.7% of records have 'NaN' values here, implying that sector attribution is not universal across all energy datasets (e.g., specific petroleum movements)."
+    ],
+    [
+      "REPORT",
+      "Value Semantics",
+      "Identifies the specific EIA survey or data collection framework. The data is aggregated from 9 distinct sources, dominated by 'EIA Electric Power Operational Data' (73.6%). The values serve as methodological provenance tags, including both public publication titles and internal form codes (e.g., 'EIA Form 930'), indicating the specific regulatory mechanism used for data collection."
+    ],
+    [
+      "EIA_VARIABLE_ID",
+      "Relational Context",
+      "Program-native variable token used as an alternative identifier for specific legacy programs (populated in 0.68% of records). It is mutually exclusive with 'EIA_SERIES_ID'. Crucially, it acts as a strict determinant key: code execution confirms that each ID maps 1-to-1 to a single, invariant combination of 'MEASURE' and 'UNIT', effectively defining standardized dimensions for these legacy data subsets."
+    ],
+    [
+      "EXPORTER_GEO_ID",
+      "Entity or Attribute Meaning",
+      "Geography entity key identifying the origin ('from' side) in directional trade flows. Verified strictly directional (zero self-reference). Populated with 5 distinct schema prefixes: 'country' (dominant), 'padDistrict', 'countryGroup', 'disputedTerritory', and 'geoId'."
+    ],
+    [
+      "VARIABLE",
+      "Entity or Attribute Meaning",
+      "Primary human-readable key describing the time series concept. While not unique per row (repeats across dates), it acts as a canonical identifier for the metric definition, strictly mapping 1-to-1 to 'MEASURE' and 'UNIT' across the entire dataset."
+    ]
+  ]
+},
+{
+    "dataset_name": "COVID19_EPIDEMIOLOGICAL_DATA",
+    "dataset_description": "This comprehensive dataset collates global epidemiological data on COVID-19 incidence and mortality, sourced from public health authorities starting from the 2019 outbreak. It includes critical variables such as vaccination rates, public health measures, testing statistics, and healthcare resource availability to track the pandemic's progression. By serving as a central source of truth, this data empowers organizations and individuals to optimize contingency planning and make informed decisions during the global health emergency.",
+    "labels": [
+        [
+            "DIFFERENCE",
+            "Aggregation and Derivation",
+            "Represents the daily variation of cases. Mathematically verified as the discrete derivative of 'CASES' (calculated as CASES[t] - CASES[t-1]) grouped by location and case type. This relationship holds for 99.98% of records. The remaining 0.02% correspond to the start of new time series where the previous value is implicitly zero."
+        ],
+        [
+            "CASE_TYPE",
+            "Value Semantics",
+            "Categorical variable with exact cardinality of 4. Values are strictly: 'Confirmed', 'Deaths', 'Recovered', and 'Active'. Defines the specific epidemiological event or status being counted in the record."
+        ],
+        [
+            "LAST_REPORTED_FLAG",
+            "Value Semantics",
+            "Boolean state indicator. The value 'True' uniquely identifies the chronologically latest record for a specific Location and Case Type. Analysis reveals the flag is sparse (present in ~32% of time series), but where present, it matches the maximum 'DATE' in 100% of cases, serving as a strictly unique end-of-series marker."
+        ],
+        [
+            "ISO3166_1",
+            "Value Representation",
+            "Standardized country code using the ISO 3166-1 Alpha-2 format (2 uppercase letters). Populated in 99.7% of rows. Acts as a normative foreign key for the 'COUNTRY_REGION' entity."
+        ],
+        [
+            "ISO3166_2",
+            "Value Representation",
+            "Geographic subdivision code. The format is inconsistent: 52.6% of non-null values follow the standard 'CC-Subdivision' format (e.g., 'US-AZ'), while 47.4% are non-standard, containing only orphan subdivision codes of length 2 (37.0%) or length 3 (10.4%) without country prefixes. Contains 82% nulls."
+        ],
+        [
+            "CASES",
+            "Entity or Attribute Meaning",
+            "Cumulative count of events (stock variable). While designed to be monotonic increasing, forensic analysis reveals negative daily differences in 5.4% of records, indicating frequent historical data corrections or adjustments."
+        ],
+        [
+            "DATE",
+            "Temporal Scope",
+            "Reference date of the observation formatted as ISO 8601 (YYYY-MM-DD). Defines the specific daily window for which the cumulative 'CASES' and differential 'DIFFERENCE' are reported."
+        ],
+        [
+            "LAST_UPDATED_DATE",
+            "Temporal Scope",
+            "Static system metadata. Contains a single identical timestamp ('2023-03-23 15:02:04.173620') for 100% of records. It represents the dataset export time or snapshot moment, not the row-level transaction time."
+        ],
+        [
+            "COUNTY",
+            "Value Representation",
+            "Structural placeholder column. Verified to be 100% Null (NaN) in this dataset version, despite its presence in the schema. Contains no usable information."
+        ],
+        [
+            "COUNTRY_REGION",
+            "Relational Context",
+            "Root geographical entity and primary grouping key. 100% populated. Maps 1:1 with 'ISO3166_1', confirming strict referential integrity. Serves as the mandatory parent scope for 'PROVINCE_STATE', resolving ambiguity for province names that appear in multiple countries (e.g., 'Amazonas', 'Unknown')."
+        ],
+        [
+            "PROVINCE_STATE",
+            "Relational Context",
+            "Second-level geographical division (Child of COUNTRY_REGION). Populated in 75.5% of rows. Contains descriptive administrative names rather than standardized codes. Since values are not globally unique (appearing in multiple countries), this field must be paired with 'COUNTRY_REGION' for identification."
+        ]
+    ]
+},
+{
+    "dataset_name": "DUTCH_WEATHER_DATA",
+    "dataset_description": "This high-resolution dataset provides validated hourly meteorological observations from all official Royal Netherlands Meteorological Institute (KNMI) weather stations, covering 1951 to the present with daily updates. While ideal for short-term analysis, this raw data is not corrected for station relocations or environmental changes, making it less suitable for rigorous long-term climate trend studies. Users seeking to analyze multi-decade trends are advised to consult KNMI's homogenized datasets instead.",
+    "labels": [
+        [
+            "STATION_ID",
+            "Relational Context",
+            "Primary Key for the station entity. Verified to have a functional dependency relationship with 'LAT', 'LON', and 'STATIONNAME': each Station ID maps to exactly one unique set of coordinates and name in 100% of records."
+        ],
+        [
+            "WSI",
+            "Entity or Attribute Meaning",
+            "Represents the WIGOS (WMO Integrated Global Observing System) Station Identifier. Code execution confirms it is an exact, redundant copy of the 'STATION_ID' column in 100% of rows (Correlation = 1.0). It serves as the official, permanent KNMI identifier for each of the 25 operational weather stations, specifying the physical observation location regardless of instrumentation changes."
+        ],
+        [
+            "WSI",
+            "Value Representation",
+            "Alphanumeric string with strict formatting. All values adhere to the Regex pattern `^0-20000-0-\\d{5}$`. The prefix '0-20000-0-' is constant, indicating a fixed network identifier."
+        ],
+        [
+            "TIME",
+            "Temporal Scope",
+            "Represents the timestamp of the instantaneous observation. Verified to have a regular hourly frequency (step = 1 hour) in >99.9% of the sequence, establishing a consistent time-series per station."
+        ],
+        [
+            "TEMP",
+            "Value Representation",
+            "Numeric float representing ambient air temperature in Celsius. Verified range is [-15.5, 34.6], consistent with historical Dutch weather records. Values are stored as 64-bit floating point numbers without sentinel values (e.g., -999.0) or infinite representations."
+        ],
+        [
+            "CLOUD_COVER",
+            "Value Semantics",
+            "Categorical integer scale representing sky coverage in Octas (WMO Code 2700). Values range from 0 (Clear sky) to 8 (Overcast), with 9 representing 'Sky obscured'. The value '8' is the most frequent class (30%), indicating high prevalence of overcast conditions."
+        ],
+        [
+            "WEATHER_CODE",
+            "Value Semantics",
+            "Categorical enumeration representing present weather conditions (likely WMO Code Table 4677). Values are sparse integers clustering around precipitation events. Crucially, the value '0.0' is a valid state representing 'Clear Sky' (verified count > 0), not a null or missing value."
+        ],
+        [
+            "PROJECTION",
+            "Value Representation",
+            "Detected as a 'Ghost Column'. Verified to be NULL (NaN/Empty) in 100% of the analyzed rows (607k records), despite the header suggesting a coordinate system."
+        ],
+        [
+            "WEATHER_IND",
+            "Value Representation",
+            "Detected as a 'Ghost Column' in this specific dataset version. Verified to be NULL (NaN) in 100% of records, contradicting any metadata suggesting active boolean flags."
+        ],
+        [
+            "WIND_GUST",
+            "Aggregation and Derivation",
+            "Represents the maximum wind speed recorded over the interval. Mathematical validation confirms that 'WIND_GUST' >= 'WIND_SPEED' (instantaneous) in 99.8% of non-null cases."
+        ],
+        [
+            "TEMP_MIN_10CM",
+            "Entity or Attribute Meaning",
+            "Represents the 'Grass Minimum Temperature' measured at 10cm height. Verified to be lower than or equal to 'TEMP' (1.5m height) in 94.2% of records. Unlike air temperature, analysis shows negligible spatial correlation with Latitude or Height, indicating it is driven principally by local micro-conditions (radiation balance) rather than broad geographic trends."
+        ],
+        [
+            "REL_HUMIDITY",
+            "Value Representation",
+            "Numeric percentage stored as float64 but containing strictly discrete integer values (modulo 1 = 0). Verified range is 2.0 to 100.0, with a left-skewed distribution."
+        ],
+        [
+            "PRECIP_DURATION",
+            "Aggregation and Derivation",
+            "Duration of precipitation in hours. Verified constraint: When 'PRECIP_DURATION' > 0, 'PRECIP_HOUR' (Amount) is non-negative (>= 0). Cases where Duration > 0 but Amount = 0 are rare (<0.1%), likely indicating 'Trace' precipitation."
+        ],
+        [
+            "VISIBILITY",
+            "Value Representation",
+            "Numeric value encoding horizontal visibility using WMO Code Table 4377. Values are discrete integers in range [0, 97]. The strict absence of values in the 51-55 range empirically confirms the specific WMO encoding (where 50 = 50km, and 56 = 6km) rather than a linear meter scale."
+        ],
+        [
+            "WIND_SPEED_HOUR",
+            "Aggregation and Derivation",
+            "Represents the average wind speed over the preceding hour. Distinct from 'WIND_SPEED' (instantaneous), it acts as a calendar-hour-aligned proxy anchored to the timestamp. Comparison confirms 'WIND_SPEED_HOUR' has lower variance (ratio ~0.96) and extremely high correlation, consistent with a time-smoothed aggregation or fallback derivation."
+        ],
+        [
+            "LAT",
+            "Entity or Attribute Meaning",
+            "Geographic Latitude in decimal degrees. Verified values fall within the range [50.9, 53.6], correctly covering the north-south extent of the Netherlands (including Maastricht) and anchoring observations to their precise spatial context."
+        ],
+        [
+            "WEATHER_FLAG_5",
+            "Value Semantics",
+            "Sparse Binary Indicator. Contains mostly 0.0 values with rare 1.0 instances. Likely represents a specific severe weather warning or quality control flag not captured by the main WEATHER_CODE."
+        ]
+    ]
+},
+        {
+    "dataset_name": "HOSPITAL_CLAIMS__REMITS_DATA",
+    "dataset_description": "This dataset delivers comprehensive hospital claims and remittance data from over 500 facilities, primarily large acute care and teaching hospitals across 44 states. With 97 million annual encounters, it specializes in high-complexity areas like oncology and rare diseases, featuring strong linkage to remittance and chargemaster data. Fully HIPAA-compliant and updated weekly, this token-agnostic resource enables detailed analysis of patient journeys and financial outcomes through granular claim and diagnosis records.",
+    "labels": [
+        [
+            "CLAIMID",
+            "Entity or Attribute Meaning",
+            "Identifies the parent billing event (Claim). Verified as non-unique across the dataset (1:N relationship with CHARGEID), serving as the grouping key for all line items. All records with the same CLAIMID share identical 'CLAIMSTMFROM' and 'CLAIMSTMTHRU' values."
+        ],
+        [
+            "CHARGEID",
+            "Entity or Attribute Meaning",
+            "The unique identifier for each specific service line. Verified to be 100% unique across the dataset, acting as the primary key and the granular unit of observation."
+        ],
+        [
+            "CLAIMSTMFROM",
+            "Temporal Scope",
+            "Represents the start date of the billing coverage period. Verified to be identical for all 'CHARGEID' records grouped under the same 'CLAIMID'. Defines the temporal lower bound for the claim."
+        ],
+        [
+            "CLAIMSTMTHRU",
+            "Temporal Scope",
+            "Represents the end date of the billing coverage period. Verified to be strictly greater than or equal to 'CLAIMSTMFROM'. Together, they define the validity duration of the claim event."
+        ],
+        [
+            "CHARGEPROCEDUREDATE",
+            "Temporal Scope",
+            "The specific calendar date of service rendering. Mathematical verification confirms 100% temporal consistency: every non-null value falls strictly within the [CLAIMSTMFROM, CLAIMSTMTHRU] interval defined by the parent claim."
+        ],
+        [
+            "CHARGES",
+            "Aggregation and Derivation",
+            "Total billed amount for the line item, representing the aggregate cost (Base Price × UNITS). Unlike previous assumptions of strict positivity, analysis confirms the presence of 0.0 values, making it a non-negative float variable."
+        ],
+        [
+            "UNITS",
+            "Value Representation",
+            "Quantitative measure of service volume (e.g., dosage, days, quantity). Verified as strictly positive integers (min=1). High variance observed in drug-related records (e.g., values >100 for J-codes), confirming its role as the scalar multiplier for 'CHARGES'."
+        ],
+        [
+            "CHARGEREVENUECODE",
+            "Value Semantics",
+            "Standardized 4-digit categorical code (UB-04 Revenue Code) identifying the hospital cost center (e.g., '0250' for Pharmacy). Stored as float values in the dataset; requires zero-padding to strictly adhere to the standard 4-character nomenclature."
+        ],
+        [
+            "CHARGEPROCEDURECODE",
+            "Value Semantics",
+            "5-character alphanumeric code (CPT/HCPCS) classifying specific medical procedures. Analysis reveals this field is sparsely populated (approx. 75% NULL), serving as a granular classifier only when distinct from the mandatory Revenue Code."
+        ],
+        [
+            "LINEITEMCONTROLNUMBER",
+            "Relational Context",
+            "Source-system control identifier for the line item. Analysis indicates heterogeneous formatting (only 70% match the standard 'ID-Sequence' regex) and significant missing data (14% Null). Unlike a primary key, it is verified to be non-unique even within specific claims (duplicates observed)."
+        ],
+        [
+            "SITEID",
+            "Relational Context",
+            "Foreign Key identifier for the originating facility or provider location. Groups multiple 'CLAIMID' events under a specific physical or logical entity."
+        ]
+    ]
+},
+        {
+    "dataset_name": "POPULATION_IN_FRANCE_AND_OVERSEAS_IN_2019",
+    "dataset_description": "This dataset provides detailed 2019 population statistics for France and its Overseas Territories at the granular IRIS (neighborhood) level. Published by INSEE, it adheres to the official 'Grand Public' schema, structuring census data not as columns but as row-based metadata entries. It is the authoritative source for demographic analysis, capturing age, sex, and household composition across over 49,000 statistical units.",
+    "labels": [
+        [
+    "COD_VAR",
+    "Relational Context",
+    "Acts as the primary discriminator key (Category Anchor) for the dataset structure, organizing rows into coherent semantic groups (e.g., 'IRIS', 'COM', 'DEP'). Forensic analysis reveals a highly skewed distribution: the value 'IRIS' repeats for over half of the rows, followed by 'COM', effectively framing the dataset as an enumeration of geographic units, while numerous other values appear only as singleton metadata definitions. Each `COD_VAR` value exhibits strict internal consistency with respect to `LONG_VAR` and `TYPE_VAR`, while intentionally allowing variation in `COD_MOD` and `LIB_MOD`, confirming its role as a semantic grouping mechanism rather than a structural or relational constraint. No evidence supports its use as a foreign key, ordering field, or dependency determinant."
+],
+        [
+    "COD_MOD",
+    "Value Semantics",
+    "Represents the specific geographic or modality code. Verified to be strictly bimodal in length: 5 characters (predominantly Communes) or 9 characters (predominantly IRIS statistical units). Contrary to the assumption of purely numeric codes, analysis confirms alphanumeric values (e.g., '2A…') for Corsican territories. While code length provides a strong indication of administrative granularity, it is not a deterministic classifier: documented exceptions exist (e.g., non-IRISed communes or legacy territorial groupings), reflecting real-world administrative and statistical practices rather than data inconsistencies. Strictly NULL for continuous variables."
+],
+
+        [
+            "LIB_MOD",
+            "Entity or Attribute Meaning",
+            "The human-readable label associated with 'COD_MOD'. Naming convention varies by level: 5-digit Commune labels are standardized names (99.98% without parentheses), while 9-digit IRIS labels frequently (67%) include disambiguating context in parentheses (e.g., 'Nom (Commune)')."
+        ],
+        [
+            "TYPE_VAR",
+            "Value Representation",
+            "Technical constraint defining the data format. Verified to contain a restricted controlled vocabulary of {'CHAR', 'NUM'}. This column aligns 1:1 with 'COD_VAR' definitions to enforce schema typing (e.g., 'NUM' for population counts, 'CHAR' for geographic codes)."
+        ],
+        [
+            "LIB_VAR_LONG",
+            "Entity or Attribute Meaning",
+            "Provides the verbose, semantic definition of the variable. Verified to be highly redundant (only 77 unique values across 84k rows), repeating the full definition (e.g., 'Code du département...') for every single geographic row. Essential for human-readable decoding of short codes."
+        ],
+        [
+            "LONG_VAR",
+            "Value Representation",
+            "Specifies the maximum character length constraint. Verified to match the actual length of 'COD_MOD' in 100% of populated rows (Validation: LONG_VAR == len(COD_MOD)). Represents a self-validating metadata schema constraint."
+        ]
+    ]
+},
+        {
+    "dataset_name": "WORLDWIDE_ADDRESS_DATA",
+    "dataset_description": "This free OpenAddresses dataset enables Snowflake users to seamlessly map geographical coordinates to detailed address components, including street, city, and postal code. Ideal for geospatial analytics, it allows for the enrichment of location datasets by appending postal codes and facilitating accurate geocoding for visualization tools. By providing essential fields such as latitude, longitude, and region, this resource supports robust data merging and precise mapping applications.",
+    "labels": [
+        [
+            "HASH",
+            "Entity or Attribute Meaning",
+            "Serves as the rigorous Primary Key for the dataset. Code analysis confirms it is 100% unique (500,000 distinct values) and non-null, acting as a synthetic surrogate key distinct from the 'ID' column."
+        ],
+        [
+            "HASH",
+            "Value Representation",
+            "Strictly formatted as a 16-character lowercase hexadecimal string (Regex: `^[0-9a-f]{16}$`). Verified to be consistent across all records regardless of the 'COUNTRY' value."
+        ],
+        [
+    "COUNTRY",
+    "Relational Context",
+    "Acts as the pivotal Context Discriminator for the dataset. Values in this column (e.g., 'mx', 'pl', 'ru') govern country-specific validation rules, format conventions, and null-semantics for dependent address fields. Empirical analysis confirms that `COUNTRY` consistently constrains the linguistic conventions of `STREET` and the presence and format behavior of `POSTCODE`, with no observed cross-country overlap. While its influence on other geographic attributes (e.g., `REGION`) remains unverified, the column functions as a contextual grouping key enabling country-aware interpretation rather than as a foreign key or ordering attribute."
+],
+        [
+    "ID",
+    "Value Semantics",
+    "Primarily serves as a country-specific source identifier, with semantics defined by national administrative systems rather than a shared global schema. Analysis reveals the presence of explicit 'soft null' markers encoded as natural language strings—particularly in the Russian subset (e.g., 'нет номера', 'отсутствует')—which function as missing-value indicators rather than valid identifiers. These artifacts introduce measurable duplication and invalidate assumptions of global uniqueness. No consistent cross-country semantic meaning or status encoding is embedded in the values; interpretation must be performed per country and, where necessary, reconciled against authoritative external references."
+],
+        [
+            "NUMBER",
+            "Value Semantics",
+            "The value 'SN' is a domain-specific flag standing for 'Sin Número' (No Number). This value is statistically significant, appearing in 30.8% of records, and is strictly confined to rows where 'COUNTRY' is 'mx', indicating physical locations lacking a specific street number."
+        ],
+        [
+            "UNIT",
+            "Value Representation",
+            "Vacuous column (Placeholder). Verified via code to be 100% NULL (NaN) across all 500,000 rows. It conveys no information in this specific dataset snapshot."
+        ],
+        [
+            "POSTCODE",
+            "Relational Context",
+            "Data quality is functionally dependent on the 'COUNTRY' column. Verified that Mexico ('mx') records are strictly Null, Poland ('pl') follows a strict `XX-XXX` mask (100% valid), while Russia ('ru') predominantly uses 6-digit numeric strings (~67%) but contains significant noise (7-digit artifacts, displaced cadastral codes)."
+        ]
+    ]
+},
+{
+    "dataset_name": "IPINFO_IP_ADDRESS_DATA_FOR_PRIVACY_DETECTION_VPN_TOR_RELAY_PROXY_ETC_",
+    "dataset_description": "Trusted by over 100,000 companies, IPinfo’s dataset delivers enterprise-grade IP intelligence designed to unmask anonymous traffic from VPNs, proxies, TOR, and hosting providers. Optimized for Snowflake, it utilizes rigorous validation and custom internet-wide scans to identify tens of millions of active masking methods. This high-performance solution enables precise detection of tunneled traffic, ensuring robust security and data accuracy for large-scale applications.",
+    "labels": [
+        [
+            "JOIN_KEY",
+            "Aggregation and Derivation",
+            "Derived grouping key used to aggregate IP ranges into subnet blocks. For IPv4 records (~90% of data), it is verified to be the bitwise AND of 'START_IP_INT' and the subnet mask 0xFFFF0000 (/16 prefix). Analysis confirms that while it groups IPs topologically, it does **not** guarantee attribute homogeneity: mixed blocks containing both masked (e.g., VPN=True) and unmasked IPs are frequent (~11k instances)."
+        ],
+        [
+            "START_IP_INT",
+            "Value Representation",
+            "Polymorphic identifier for the start of the IP range. Analysis confirms mixed data types: standard integers for IPv4 addresses and **string-wrapped hexadecimal values** (enclosed in double quotes, e.g., `\"240AC...\"`) for IPv6. This format is intentional and valid, requiring specialized parsing logic, not an ingestion error."
+        ],
+        [
+            "VPN",
+            "Value Semantics",
+            "Boolean indicator for Virtual Private Network endpoints. Uses a sparse representation where 'True' indicates positive detection and null/empty values imply negative or unknown status. Statistical analysis confirms overlap with the 'HOSTING' flag in a subset of records, indicating commercial hosting providers used for VPN egress."
+        ],
+        [
+            "SERVICE",
+            "Entity or Attribute Meaning",
+            "Identifies the specific commercial entity or service provider managing the IP (e.g., 'NordVPN', 'TorExit'). This field is conditionally populated and does not have 1:1 coverage with the 'VPN' flag; it implies widely recognized commercial attribution rather than just technical detection."
+        ],
+        [
+    "START_IP",
+    "Relational Context",
+    "Defines the inclusive lower bound of the IP address block. Strictly correlated with 'END_IP' to define a continuous range. Verified constraint: `START_IP_INT <= END_IP_INT` holds for 100% of valid parsable records (IPv4), confirming the relational integrity of the range definitions despite parsing challenges with IPv6. While the column encodes valid structural boundaries for IP ranges, no empirical evidence confirms that the ranges enforce attribute homogeneity or act as semantic grouping units beyond their role as positional delimiters."
+],
+        [
+    "TOR",
+    "Value Semantics",
+    "Categorical flag identifying Tor network exit nodes. Highly sparse (< 0.1% density). Contrary to the expectation of residential anonymity, analysis reveals a **high overlap (~86%)** with the 'HOSTING' flag, confirming that the vast majority of identified Tor exit nodes in this dataset operate on commercial hosting infrastructure. A `True` value represents a definitive, positive identification of Tor exit usage at the IP-range level, while null values are best interpreted as *absence of a confirmed Tor designation* rather than an explicit negative classification, as completeness and mutual exclusivity with other anonymization flags are not empirically guaranteed."
+],
+
+        [
+            "END_IP_INT",
+            "Aggregation and Derivation",
+            "Represents the mathematical upper bound of the IP range. For IPv4, the range size (END_IP_INT - START_IP_INT + 1) explicitly indicates the block size, which varies from single IPs (/32) to full CIDR blocks."
+        ]
+    ]
+},
+{
+        "dataset_name": "B2BCONNECT__BUSINESS_FIRMOGRAPHICS_DEMOSAMPLE",
+        "dataset_description": "The B2bConnect™ Free Dataset provides a sample of approximately 2,000 fictitious records designed to demonstrate the structure and depth of Equifax's global commercial data. Covering diverse industries, this testing dataset includes comprehensive fields such as firmographics, risk indicators, corporate linkage, and NAICS/SIC codes. It enables marketers and database managers to evaluate the data's utility for segmentation, targeting, and entity resolution before accessing the full production database of over 185 million business locations.",
+        "labels": [
+            [
+            "ID",
+            "Entity or Attribute Meaning",
+            "Uniquely identifies each business record in the dataset. Verified as a sequential integer key with 100% uniqueness across the sample (e.g., 29, 559, 2), serving as the primary anchor for entity resolution."
+            ],
+            [
+            "YREST",
+            "Temporal Scope",
+            "Represents the 'Year Established' for the business entity. Verified to contain exclusively 4-digit integers (e.g., 1993, 2001) falling within a valid historical range (min: 1925, max: 2019 in sample), designating the start of the entity's lifecycle."
+            ],
+            [
+            "GEOPREC",
+            "Value Semantics",
+            "Specifies the precision level of the geocoding (Latitude/Longitude). Contains discrete numeric codes. '255' is the dominant mode in the sample, indicating a specific granularity level (likely ZIP Centroid), distinguishing it from higher precision codes."
+            ],
+            [
+            "SOHO",
+            "Value Semantics",
+            "Binary flag indicating 'Small Office / Home Office' status. Verified to contain only 'Y' or Null values. The presence of 'Y' strictly classifies the entity as a SOHO, distinct from standard commercial or residential listings."
+            ],
+            [
+            "BUSSIZE",
+            "Value Semantics",
+            "Categorical code denoting the size bracket of the business. Observed values include single characters 'S', 'X', 'M', and 'L', which map to specific revenue or employee count ranges (e.g., Small, Medium, Large, Extra Large)."
+            ],
+            [
+            "LAT",
+            "Value Representation",
+            "Geographic Latitude coordinate. Verified to be a floating-point number with high precision (6 decimal places, e.g., 41.117711). Constraints adhere to the valid range for North America (approx 25.0 to 49.0 for CONUS)."
+            ],
+            [
+            "CMRA",
+            "Entity or Attribute Meaning",
+            "Acronym for 'Commercial Mail Receiving Agency'. Acts as a boolean flag (Present/Null) indicating if the address is a private mailbox service rather than a physical building location."
+            ],
+            [
+            "PUBLIC",
+            "Value Semantics",
+            "Ownership status indicator. Contains numeric codes (predominantly '2' in the sample) or Nulls. Distinguishes between Publicly Traded companies and Private entities."
+            ],
+            [
+            "BIZ",
+            "Entity or Attribute Meaning",
+            "Business Residence indicator. A flag (typically 'Y') confirming the entity operates as a commercial business. Verified to be sparsely populated, distinguishing business records from residential ones in mixed datasets."
+            ],
+            [
+            "PRIMSIC",
+            "Value Semantics",
+            "Primary Standard Industrial Classification (SIC) code. Verified to consist of 4-digit numeric strings (e.g., '7513', '8051'). This column maps 1-to-1 with 'PRIMSICDESC' and classifies the core economic activity of the business based on the US government system."
+            ],
+            [
+            "PRIMNAICSCODE",
+            "Value Semantics",
+            "Primary North American Industry Classification System (NAICS) code. Verified to strictly follow the 6-digit standard format (e.g., '532120', '624190'), providing a more modern and granular industry classification than SIC."
+            ],
+            [
+            "CORPAMOUNT",
+            "Value Representation",
+            "Represents the Corporate Sales or Revenue figure. Verified to be a non-negative numeric value (e.g., 8530000). The distribution spans multiple orders of magnitude, indicating coverage from small businesses to large corporations."
+            ],
+            [
+            "LOCEMPCNT",
+            "Value Representation",
+            "Location Employee Count. Represents the number of employees specifically at the listed address (as opposed to the global corporate headcount). Verified to be a non-negative integer (e.g., 7, 12, 220)."
+            ],
+            [
+            "PRIMSICDESC",
+            "Relational Context",
+            "Textual description of the Primary SIC code. Shows a strict functional dependency on 'PRIMSIC', providing the human-readable label (e.g., 'TRUCK RENTAL AND LEASING...') for the corresponding numeric code."
+            ],
+            [
+            "STATE",
+            "Value Semantics",
+            "Two-letter US State abbreviation (e.g., 'MA', 'TX'). Verified to adhere to ISO 3166-2:US subdivision codes, serving as a primary geographic partition for the dataset."
+            ]
+        ]
+    },
+    {
+        "dataset_name": "DRUG_TARGET_IDENTIFICATION",
+        "dataset_description":"This Target Identification Data Package covers 16,558 drugs and 19,535 targets across 743 therapeutic categories, enriched with ADMET properties to support predictive modeling. Designed for drug discovery, it enables researchers to analyze connections between chemical structures, metabolism, and adverse effects to generate robust hypotheses. By aggregating data on functional groups and drug-drug interactions, this resource facilitates the detailed evaluation of research trends and the assessment of novel targets.",
+        "labels": [
+            [
+            "IDENTIFIER",
+            "Entity or Attribute Meaning",
+            "Uniquely identifies each clinical trial registry entry. Verified to be 100% unique across all records, serving as the Primary Key. Corresponds to the standard 'NCT Number' issued by ClinicalTrials.gov."
+            ],
+            [
+            "IDENTIFIER",
+            "Value Representation",
+            "Strictly formatted string following the Regular Expression pattern `^NCT\\d{8}$`. All values consist of the prefix 'NCT' followed by exactly 8 digits. Verified adherence in 100% of rows."
+            ],
+            [
+            "EXPANDED_ACCESS",
+            "Value Semantics",
+            "Boolean indicator specifying if the investigational drug is available for compassionate use. Values are strictly 'True' or 'False'. Contrary to typical registry distributions, this specific dataset shows a dominant prevalence of 'True' (>80% of records), indicating a filtered or targeted subset of trials."
+            ],
+            [
+            "END_DATE_KIND",
+            "Value Semantics",
+            "Categorical qualifier for the 'END_DATE' column. Verified values are strictly {'actual', 'anticipated', null}. While null values strongly correlate with missing 'END_DATE', exceptions exist (e.g., NCT00069251) where the date is populated but the qualifier is missing."
+            ],
+            [
+            "STATUS",
+            "Value Semantics",
+            "State-machine status of the trial. Verified values belong to a controlled vocabulary including 'completed', 'recruiting', 'active_not_recruiting', 'terminated', 'withdrawn', and 'unknown_status'. 'Completed' is the most frequent class in this distribution."
+            ],
+            [
+            "WHY_STOPPED_CATEGORY_ID",
+            "Relational Context",
+            "Numeric categorical code representing the reason for trial termination. Verified to be populated (non-null) exclusively when 'STATUS' is 'terminated', 'withdrawn', or 'suspended'. Strongly correlates with the free-text 'WHY_STOPPED' field (e.g., ID '1.0' maps to 'Sponsor decision')."
+            ],
+            [
+            "START_DATE",
+            "Temporal Scope",
+            "Represents the specific calendar date of trial initiation. Mathematical verification confirms that 'START_DATE' is less than or equal to 'END_DATE' in 99.8% of records where both dates are populated, ensuring logical temporal consistency."
+            ],
+            [
+            "_FIVETRAN_DELETED",
+            "Value Semantics",
+            "Technical boolean flag used for soft-deletion in data pipelines. Verified that 100% of values are 'False' in the current snapshot, indicating all records are active."
+            ],
+            [
+            "PURPOSE",
+            "Value Semantics",
+            "Categorical attribute describing the primary goal of the trial. Values are drawn from a fixed domain including 'treatment', 'prevention', 'diagnostic', 'basic_science', 'supportive_care', and 'health_services_research'. 'Treatment' is the dominant category."
+            ],
+            [
+            "_FIVETRAN_SYNCED",
+            "Temporal Scope",
+            "System-generated timestamp representing the instant of data ingestion/synchronization. Format follows ISO 8601 with timezone offset (e.g., `2024-08-09 01:40:27...`). Values cluster tightly, indicating batch processing."
+            ]
+        ]
+    },
+    {
+        "dataset_name": "US_NEW_INDUSTRIAL_DEVELOPMENTS",
+        "dataset_description":"This dataset offers a detailed, daily-updated inventory of US industrial real estate, tracking planned, under-construction, and completed projects such as warehouses, logistics hubs, and data centers. Sourced from planning filings, satellite imagery, and proprietary models, it provides granular insights into development timelines, building footprints, and ownership. Ideally suited for strategic planning, it allows users to monitor supply chain expansion and analyze regional growth trends across key logistics corridors.",
+        "labels": [
+            [
+            "ATERIO_INDUSTRIAL_PROJECT_UID",
+            "Entity or Attribute Meaning",
+            "Acts as the immutable Primary Key for the project entities. Forensic analysis confirms 100% uniqueness across all records. The format is verified as a standard UUID Version 4 (36-character hexadecimal string with hyphens), serving as the central join key for this dataset."
+            ],
+            [
+            "PCT_CONSTRUCTION_STATUS",
+            "Value Representation",
+            "Represents the completion ratio as a normalized floating-point precision number ($0.0 \\le x \\le 1.0$). Statistical analysis shows a bimodal distribution clustering heavily at 0.0 (Pre-construction) and specific milestone increments (e.g., 0.05, 0.1, 1.0), rather than a continuous linear progression."
+            ],
+            [
+            "PROJECT_COST",
+            "Value Semantics",
+            "Quantifies estimated Capital Expenditure (CapEx) in USD. Data profiling reveals that >95% of non-zero values are heavily rounded (integers stored as floats ending in .0), confirming these figures represent high-level budgetary announcements rather than precise ledger actuals."
+            ],
+            [
+            "NOTES",
+            "Value Representation",
+            "Contains unstructured text enriched with a strict internal audit syntax. A Regex scan confirms that a significant portion of entries begin with the pattern `^\\[\\d{4}-\\d{2}-\\d{2}\\s[A-Z]{2,3}\\]` (Date + Analyst Initials), indicating a manual, append-only log format is used for tracking project intelligence."
+            ],
+            [
+            "PROJECT_STAGE",
+            "Value Semantics",
+            "Categorical state indicator with a controlled vocabulary (e.g., 'Announcement', 'Construction', 'Active'). Cross-column dependency analysis confirms that the value of this field dictates the non-null density of downstream temporal columns (e.g., 'Construction' implies `PROJECT_CONSTRUCTION_START_DATE` is present)."
+            ],
+            [
+            "TOT_FACILITY_SPACE_SQFT",
+            "Value Semantics",
+            "Denotes the gross floor area of the facility in Square Feet. The distribution is highly right-skewed with extreme outliers (>1M sqft) representing 'Gigafactory' class projects. Null values are statistically correlated with projects in the 'Announcement' stage where specifications are not yet finalized."
+            ],
+            [
+            "COMPANIES_INVOLVED",
+            "Aggregation and Derivation",
+            "A denormalized list field allowing many-to-many relationships within a single cell. Entries use comma separation to aggregate secondary stakeholders (e.g., 'Company A, Company B'), distinct from the atomic 'COMPANY_NAME' column which identifies the primary principal."
+            ],
+            [
+            "PROJECT_LIKELIHOOD_EXECUTION",
+            "Value Semantics",
+            "A discrete ordinal risk metric ranking projects as 'Low', 'Medium', or 'High'. Conditional probability analysis shows that records labeled 'High' have a >80% correlation with the presence of verified external evidence, specifically non-null values in `PROJECT_PERMIT_URL` or `LATEST_SATELLITE_PICTURE_DATE`."
+            ],
+            [
+            "UPDATED_AT",
+            "Temporal Scope",
+            "Represents a Batch/System Snapshot Timestamp rather than a transactional row update. Unlike `RECORD_UPDATED_DATE`, which varies by row, this column shows extreme value repetition (e.g., a single date '2025-12-18' covering >90% of the sample), indicating the date of the dataset export or last global schema refresh."
+            ],
+            [
+            "COMPANY_TICKER_NAME",
+            "Entity or Attribute Meaning",
+            "Identifies the stock market symbol for publicly traded entities associated with the project (e.g., 'AAPL', 'LLY'). This is a sparse column (populated only for public companies) and serves as an external linkage key to financial knowledge bases or stock market datasets."
+            ],
+            [
+            "JOB_CREATION_COUNT",
+            "Value Representation",
+            "Represents the projected human capital impact as a floating-point number. Although conceptually an integer count of persons, the data type is `float`, and values are often rounded to the nearest ten or hundred, reinforcing that these are economic forecast estimates rather than verified payroll headcounts."
+            ]
+        ]
+    },
+    {
+        "dataset_name": "WEATHER_SOURCE_LLC_FROSTBYTE",
+        "dataset_description":"Designed for the Snowflake \"Tasty Bytes\" Quickstart, this dataset from Weather Source offers real-time and historical weather data across 30 major global cities, including New York, London, and Tokyo. Covering postal codes within 20 miles of city centers in 15 countries, it enables users to analyze weather impacts on food truck operations and supply chains. This OnPoint data empowers businesses to generate actionable insights into foot traffic, sales, and logistics performance.",
+        "labels": [
+            [
+            "POSTAL_CODE",
+            "Value Representation",
+            "Heterogeneous geographic identifier adhering to strict country-specific regex patterns. Verified formats include: alphanumeric 'A1A 1A1' for Canada (CA), variable-length alphanumeric for the United Kingdom (GB, e.g., 'SE17 3JB'), and numeric '00000-000' for Brazil (BR). Format consistency is verified across 100% of records relative to the 'COUNTRY' column."
+            ],
+            [
+            "DOY_STD",
+            "Aggregation and Derivation",
+            "Acronym for 'Day Of Year Standard'. Mathematically derived from 'DATE_VALID_STD'. The rule 'DOY = Ordinal day of the date' is verified for 100% of records (e.g., '2026-02-04' maps exactly to 35). Values are integers strictly within the 1-366 range."
+            ],
+            [
+            "MIN_TEMPERATURE_AIR_2M_F",
+            "Relational Context",
+            "The lower bound of a logical temperature triplet. The strict inequality constraint 'MIN_TEMPERATURE <= AVG_TEMPERATURE <= MAX_TEMPERATURE' is verified for 100% of observations. Represents the daily minimum air temperature measured 2 meters above ground."
+            ],
+            [
+            "TIME_INIT_UTC",
+            "Temporal Scope",
+            "Represents the 'Snapshot' timestamp of the forecast model initialization. Unlike 'DATE_VALID_STD' (which varies as the forecast horizon), this column exhibits extremely low cardinality (predominant value '2026-01-21'), indicating the dataset belongs to a single specific model execution batch."
+            ],
+            [
+            "MIN_HUMIDITY_SPECIFIC_2M_GPKG",
+            "Value Representation",
+            "Technical representation of specific humidity. The unit is explicitly defined in the suffix: 'GPKG' stands for 'Grams Per Kilogram' (g/kg). Values are strictly positive floats, semantically distinct from relative humidity (PCT)."
+            ],
+            [
+            "COUNTRY",
+            "Value Semantics",
+            "Categorical ISO 3166-1 alpha-2 code. The dataset exclusively contains the values 'CA' (Canada), 'GB' (United Kingdom), and 'BR' (Brazil). This column acts as a functional determinant for the regex format validation of the 'POSTAL_CODE' column."
+            ],
+            [
+            "PROBABILITY_OF_PRECIPITATION_PCT",
+            "Value Semantics",
+            "Probabilistic value expressed as an integer percentage (0-100). Analysis reveals a dense, granular distribution (e.g., 6, 27, 82, 96) rather than simplified tiers, indicating these are raw, unrounded outputs from a meteorological ensemble model."
+            ],
+            [
+            "TOT_SNOWFALL_IN",
+            "Value Semantics",
+            "Zero-Inflated variable. Over 90% of values are exactly 0.00. Non-zero values are present exclusively when 'MIN_TEMPERATURE_AIR_2M_F' is physically compatible with freezing conditions, confirming the thermodynamic consistency of the data."
+            ],
+            [
+            "MIN_PRESSURE_MEAN_SEA_LEVEL_MB",
+            "Aggregation and Derivation",
+            "Atmospheric pressure normalized to mean sea level. The physical relationship is verified: this value is systematically greater than or equal to the surface pressure ('MIN_PRESSURE_2M_MB') for all terrestrial locations, effectively compensating for altitude."
+            ],
+            [
+            "AVG_WIND_DIRECTION_10M_DEG",
+            "Value Representation",
+            "Cyclic variable expressed in degrees (0-360). Values are integers. Although mathematically 0 and 360 are equivalent (North), the dataset treats them as distinct values. The absence of negative values or >360 confirms the geometric nature of the data."
+            ],
+            [
+            "DATE_VALID_STD",
+            "Temporal Scope",
+            "Defines the temporal horizon of the forecast validity. The difference in days between this column and 'TIME_INIT_UTC' calculates the 'Lead Time' (forecast horizon) which varies progressively throughout the dataset."
+            ]
+        ]
+    }
+]
