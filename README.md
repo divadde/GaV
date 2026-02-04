@@ -58,7 +58,7 @@ All facets, along with examples and annotation guidelines, are detailed in `Colu
 
 ---
 
-## 🧾 Annotation Format (tobe modified)
+## 🧾 Annotation Format
 
 The benchmark annotations are stored in the JSON files, `v2_final_attributes_json.json` and `industrial_benchmark_attributes.json`, following this structure:
 
