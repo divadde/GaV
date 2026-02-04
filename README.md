@@ -94,6 +94,35 @@ All statements underwent review for **semantic correctness, clarity, and groundi
 
 ---
 
+## 📊 Experimental Results
+
+We evaluated **GaV** on a benchmark of real-world datasets, comparing different LLM backbones and architectural configurations. The table below reports the average performance metrics extracted from our experiments.
+
+### Ablation Study & Performance Metrics
+
+| Configuration | Model | Accuracy | Input Tokens (Avg) | Output Tokens (Avg) | Time (s) |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **Vanilla** (Direct Prompt) | gpt-5 | 59.0% | 32k | 9.8k | 43s |
+| | gpt-5-mini | 55.0% | 32k | 5.3k | 16s |
+| **Description Only** (No Verifier) | gpt-5 | 77.0% | 85k | 40k | 168s |
+| **Verifier Only** (No Description) | gpt-5 | 81.0% | 117k | 135k | 583s |
+| **GaV (Ours)** | **gpt-5** | **87.0%** | 179k | 164k | 509s |
+| | **gpt-5-mini** | **82.0%** | 203k | 96k | 306s |
+
+> **Note:** Metrics are averaged across the benchmark datasets. Time represents the end-to-end processing duration per dataset.
+
+### 📝 Key Findings
+
+The results highlight three critical insights regarding the **GaV** architecture:
+
+1.  **Necessity of the Full Loop:** The **Vanilla** approach fails to reliably capture column semantics (~59% accuracy), proving that simple prompting is insufficient for complex data understanding tasks.
+2.  **Efficiency of the "Warm-Start":**
+    * The **Verifier Only** configuration achieves good accuracy (81%) but is slower (583s) due to the lack of context, which forces the agent into costly refinement loops.
+    * **GaV (Ours)** uses the Description component to "warm-start" the verification. While this increases the input context (~179k tokens), it actually **reduces the total execution time** to 509s (-13% compared to Verifier Only) and boosts accuracy to **87%**, as the Verifier starts with a stronger hypothesis.
+3.  **Cost-Effective Scalability:** The **gpt-5-mini** model with the GaV architecture achieves **82% accuracy**, outperforming the larger GPT-5 model in the "Description Only" setup (77%). This demonstrates that our neuro-symbolic architecture enables smaller, cheaper models to perform competitively on complex industrial tasks.
+
+---
+
 ## 🎯 Intended Use
 
 ABCU is intended for evaluating and developing systems that perform:
