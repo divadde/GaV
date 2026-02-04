@@ -102,11 +102,108 @@ All statements underwent review for **semantic correctness, clarity, and groundi
 
 ---
 
-# benchmark statistics
+### 🏭 Industrial Subset Statistics (Snowflake Source)
+
+To validate GaV in enterprise scenarios, we analyzed the specific properties of the 19 datasets sourced from the Snowflake Marketplace and regulatory bodies. This subset is designed to test the model against rigorous business schemas and domain-specific terminology.
+
+#### 📈 Key Metrics
+| Metric | Value | Interpretation |
+| :--- | :--- | :--- |
+| **Total Datasets** | 19 | Diverse industrial verticals |
+| **Annotated Attributes** | 196 | Target columns for semantic verification |
+| **Avg. Description Length** | ~35 words | High semantic density (requires rich explanations) |
+| **Ambiguous Headers** | 14 | Recurring generic names (e.g., `UNIT`, `VARIABLE`, `ID`) that require context to resolve |
+
+#### 🌐 Domain Coverage
+The industrial benchmark is not limited to a single vertical but spans critical enterprise sectors:
+
+* **💰 Finance & Banking:** FDIC Branch Locations, SEC Financial Analytics, CFPB Complaints.
+* **🏥 Healthcare & Life Sciences:** COVID-19 Epidemiological Data, Hospital Claims/Remits.
+* **🚚 Supply Chain & Infrastructure:** DOT Transportation Statistics, EIA Energy Attributes, Bureau of Labor Statistics.
+* **📍 Location & Demographics:** FEMA Disaster Areas, OpenCellID, Demographics Data.
+* **☁️ Weather & Environment:** Dutch Weather Data, Global Environmental Attributes.
+
+#### 🧠 Semantic Aspect Distribution
+The annotations are balanced across the ABCU ontology, ensuring the model is tested on multiple dimensions of understanding:
+
+| Semantic Aspect | Share | Description |
+| :--- | :--- | :--- |
+| **Value Semantics** | **25.2%** | Meaning of specific values (e.g., *"Is 'P' Provisional or Permanent?"*) |
+| **Value Representation** | **21.8%** | Data types and formats (e.g., *"Is this date UNIX epoch or ISO-8601?"*) |
+| **Entity Meaning** | **17.8%** | Real-world entity mapping (e.g., *"Is this ID for the Bank or the Branch?"*) |
+| **Relational Context** | **12.4%** | Foreign keys and functional dependencies |
+| **Temporal Scope** | **12.4%** | Time validity and granularity |
+| **Aggregation/Derivation** | **10.4%** | Formulas and calculated fields |
+
+> **Observation:** The high percentage of *Value Semantics* and *Relational Context* confirms that this benchmark moves beyond simple schema matching, requiring deep inspection of data content and relationships.
+
+
+### 🏛️ Municipal Subset Statistics (NYC Open Data)
+
+The core of our benchmark comprises 26 datasets from the NYC Open Data portal. This subset represents the "Socio-Science" domain and challenges the model with high ambiguity, messy formatting, and the "dirty" reality of public administration data.
+
+#### 📈 Key Metrics
+| Metric | Value | Interpretation |
+| :--- | :--- | :--- |
+| **Total Datasets** | 26 | Wide variety of civic topics |
+| **Annotated Attributes** | 283 | Columns with human-verified ground truth |
+| **Avg. Description Length** | **~66 words** | Extremely high verbosity (descriptions often include legal/administrative context) |
+| **Ambiguous Headers** | 39 | Frequent generic names (e.g., `Borough`, `Latitude`, `Code`) requiring row-level analysis |
+
+#### 🌐 Domain Coverage
+The civic benchmark covers the critical infrastructure of a metropolis:
+* **🏙️ Urban Planning & Housing:** Building permits, Wi-Fi hotspots, housing development data.
+* **🚌 Transportation & Logistics:** Traffic volume counts, subway entrances, taxi zones.
+* **🚑 Public Health:** Drug test locations, epidemiological statistics, water quality.
+* **👮 Public Safety:** NYPD complaint data, accident reports.
+* **🎓 Education & Demographics:** School districts, SAT results, demographic breakdowns.
+
+#### 🧠 Semantic Aspect Distribution
+Unlike the industrial subset which focuses on values and types, the civic subset requires strong **Entity Interpretation** (understanding what a "Zone" or "District" effectively means in a city context).
+
+| Semantic Aspect | Share | Description |
+| :--- | :--- | :--- |
+| **Entity Meaning** | **23.9%** | Mapping generic codes to real-world entities (e.g., *"Is '1' Manhattan or Bronx?"*) |
+| **Value Semantics** | **18.8%** | Interpreting specific administrative codes and flags |
+| **Value Representation** | **17.8%** | Handling non-standard formats (e.g., coordinates, weird date strings) |
+| **Relational Context** | **14.7%** | Linking datasets (e.g., Schools to Districts) |
+| **Temporal Scope** | **13.1%** | Validity windows of permits and licenses |
+| **Aggregation/Derivation** | **7.3%** | Understanding calculated metrics (e.g., *Total Students*) |
+
+> **Comparison:** Note that the **Average Description Length** here (66 words) is nearly double that of the Industrial subset (35 words), confirming that "in-the-wild" public data requires significantly more verbose and contextual reasoning to be fully understood.
 
 ---
 
-# brief description of the workflow with image
+## 🚀 Architecture & Workflow
+
+The GaV system operates through a multi-agent architecture designed to mimic the reasoning process of a human data engineer. The workflow is divided into two sequential phases.
+
+![GaV Architecture](assets/architecture.png)
+*(Figure: Overview of the Guess-and-Verification Protocol)*
+
+### Phase 1: Context Initialization
+Before reasoning begins, the system builds a foundational context for the dataset, known as the **Preliminary Dataset Description**. This involves:
+* **Statistical Profiling:** Computing column-level statistics (distributions, null rates, types).
+* **Sampling:** Extracting representative row samples to provide local data context.
+* **Zero-Shot Description:** An initial LLM-generated summary of the attribute based on surface features and metadata.
+
+### Phase 2: The Guess-and-Verify Loop
+The core reasoning is handled by three specialized agents working in an iterative loop:
+
+1.  **🤖 Hypothesis Generator**
+    * **Role:** Formulates candidate semantic statements (the "Guess") for a specific column aspect based on the preliminary context.
+    * **Refinement:** If a hypothesis is rejected, it uses the Verifier's feedback to generate a corrected and more robust version.
+
+2.  **⚖️ Verifier Agent**
+    * **Role:** Evaluates the validity of each hypothesis. It dynamically assesses the **Verification Complexity**:
+        * **Easy Path (Reflection):** For trivial checks (e.g., value ranges), it verifies the hypothesis autonomously against metadata.
+        * **Hard Path (Delegation):** For complex claims requiring deep inspection, it formulates a natural language *Investigation Query* for the Data Analyst.
+
+3.  **🕵️ Data Analyst (Code Interpreter)**
+    * **Role:** Provides the empirical grounding. It acts as a **ReAct agent** that translates investigation queries into executable **Python/Pandas code**.
+    * **Action:** It executes the code on the actual dataset, interprets the execution results, and compiles an evidence-based **Verification Report** back to the Verifier.
+
+This **Generate $\rightarrow$ Verify $\rightarrow$ Refine** loop ensures that every semantic profile produced by GaV is not just plausible, but empirically supported by the underlying data.
 
 ---
 
