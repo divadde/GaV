@@ -155,7 +155,7 @@ Our ablation study reveals critical insights into the interplay between Large La
 
 #### 4. The "Warm-Start" Synergy (Ours - Full Architecture)
 * **Configuration:** *Description ON, Verifier ON*
-* **Observation:** Activating both components achieves the state-of-the-art accuracy (**87%**) while actually *reducing* execution time compared to the "Verifier Only" setup (~509s vs 583s).
+* **Observation:** Activating both components achieves the state-of-the-art accuracy (**87%**) while actually *reducing* execution time compared to the "Verifier Only" setup (~509s vs 583s for GPT-5).
 * **Technical Insight:** This result highlights a critical efficiency trade-off. Although the Description component increases the input context overhead (**~178k input tokens**), it acts as a **"Warm-Start" mechanism**. It primes the Generator with a high-quality context, leading to a much stronger initial hypothesis. Consequently, the Verifier accepts the hypothesis with significantly fewer refinement steps and fewer calls to the Data Analyst code interpreter. The initial investment in input tokens pays off by preventing expensive iterative corrections.
 
 ### 💡 Conclusion: Architectural Robustness
