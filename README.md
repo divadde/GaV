@@ -96,18 +96,41 @@ All statements underwent review for **semantic correctness, clarity, and groundi
 
 ## 📊 Experimental Results
 
-We evaluated **GaV** on a benchmark of real-world datasets, comparing different LLM backbones and architectural configurations. The table below reports the average performance metrics extracted from our experiments.
+We evaluated **GaV** on an industrial benchmark of real-world datasets from Snowflake source, comparing different LLM backbones and architectural configurations. The table below reports the average performance metrics extracted from our experiments.
 
-### Ablation Study & Performance Metrics
+### 🤖 GPT Family Performance
 
-| Configuration | Model | Accuracy | Input Tokens (Avg) | Output Tokens (Avg) | Time (s) |
-| :--- | :--- | :---: | :---: | :---: | :---: |
-| **Vanilla** (Direct Prompt) | gpt-5 | 59.0% | 32k | 9.8k | 43s |
-| | gpt-5-mini | 55.0% | 32k | 5.3k | 16s |
-| **Description Only** (No Verifier) | gpt-5 | 77.0% | 85k | 40k | 168s |
+| Configuration | Model | Accuracy | Input Tokens | Output Tokens | Time |
+|:---|:---|:---:|:---:|:---:|:---:|
+| **Vanilla** (Direct Prompt) | gpt-5 | 59.0% | 32k | 9k | 42s |
+| | gpt-5-mini | 55.0% | 32k | 5k | 16s |
+| | gpt-5-nano | 52.0% | 32k | 12k | 22s |
+| **Description Only** (No Verifier) | gpt-5 | 77.0% | 85k | 39k | 167s |
+| | gpt-5-mini | 75.0% | 92k | 24k | 67s |
+| | gpt-5-nano | 65.0% | 90k | 51k | 78s |
 | **Verifier Only** (No Description) | gpt-5 | 81.0% | 117k | 135k | 583s |
-| **GaV (Ours)** | **gpt-5** | **87.0%** | 179k | 164k | 509s |
-| | **gpt-5-mini** | **82.0%** | 203k | 96k | 306s |
+| | gpt-5-mini | 76.0% | 140k | 74k | 305s |
+| | gpt-5-nano | 66.0% | 132k | 176k | 415s |
+| **GaV (Ours)** | **gpt-5** | **87.0%** | **178k** | **163k** | **508s** |
+| | **gpt-5-mini** | **82.0%** | **202k** | **95k** | **305s** |
+| | **gpt-5-nano** | **72.0%** | **201k** | **221k** | **399s** |
+
+### 🧠 Qwen Family Performance
+
+| Configuration | Model | Accuracy | Input Tokens | Output Tokens | Time |
+|:---|:---|:---:|:---:|:---:|:---:|
+| **Vanilla** (Direct Prompt) | qwen-plus | 42.0% | 36k | 1k | 5s |
+| | qwen-plus (thinking) | 53.0% | 46k | 13k | 51s |
+| | qwen3-max | 43.0% | 36k | 0k | 7s |
+| **Description Only** (No Verifier) | qwen-plus | 56.0% | 69k | 3k | 20s |
+| | qwen-plus (thinking) | 68.0% | 96k | 48k | 173s |
+| | qwen3-max | 59.0% | 67k | 3k | 34s |
+| **Verifier Only** (No Description) | qwen-plus | 57.0% | 135k | 34k | 101s |
+| | qwen-plus (thinking) | 71.0% | 118k | 173k | 531s |
+| | qwen3-max | 59.0% | 122k | 25k | 151s |
+| **GaV (Ours)** | **qwen-plus** | **61.0%** | **168k** | **36k** | **126s** |
+| | **qwen-plus (thinking)**| **75.0%** | **169k** | **196k** | **522s** |
+| | **qwen3-max** | **63.0%** | **153k** | **26k** | **209s** |
 
 > **Note:** Metrics are averaged across the benchmark datasets. Time represents the end-to-end processing duration per dataset.
 
@@ -115,11 +138,11 @@ We evaluated **GaV** on a benchmark of real-world datasets, comparing different 
 
 The results highlight three critical insights regarding the **GaV** architecture:
 
-1.  **Necessity of the Full Loop:** The **Vanilla** approach fails to reliably capture column semantics (~59% accuracy), proving that simple prompting is insufficient for complex data understanding tasks.
+1.  **Necessity of the Full Loop:** The **Vanilla** approach (standard LLM prompting) fails to capture column semantics reliably (~59% accuracy with GPT-5), proving that column understanding requires iterative reasoning and evidence gathering.
 2.  **Efficiency of the "Warm-Start":**
-    * The **Verifier Only** configuration achieves good accuracy (81%) but is slower (583s) due to the lack of context, which forces the agent into costly refinement loops.
-    * **GaV (Ours)** uses the Description component to "warm-start" the verification. While this increases the input context (~179k tokens), it actually **reduces the total execution time** to 509s (-13% compared to Verifier Only) and boosts accuracy to **87%**, as the Verifier starts with a stronger hypothesis.
-3.  **Cost-Effective Scalability:** The **gpt-5-mini** model with the GaV architecture achieves **82% accuracy**, outperforming the larger GPT-5 model in the "Description Only" setup (77%). This demonstrates that our neuro-symbolic architecture enables smaller, cheaper models to perform competitively on complex industrial tasks.
+    * The **Verifier Only** configuration is accurate but slow (e.g., 583s for GPT-5) because the lack of initial context forces the agent into costly refinement loops.
+    * **GaV (Ours)** uses the Description component to "warm-start" the verification. While this increases the input context, it significantly **reduces the total execution time** (e.g., down to 508s for GPT-5) and boosts accuracy to **87%**, as the Verifier starts with a stronger hypothesis.
+3.  **Cost-Effective Scalability:** Remarkably, **GaV with gpt-5-mini** achieves **82.0% accuracy**, outperforming the larger GPT-5 model in the "Description Only" setup (77%). This demonstrates that our agentic architecture enables smaller, cheaper models to perform effectively on complex industrial tasks.
 
 ---
 
