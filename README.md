@@ -178,7 +178,7 @@ Unlike the industrial subset which focuses on values and types, the civic subset
 
 The GaV system operates through a multi-agent architecture designed to mimic the reasoning process of a human data engineer. The workflow is divided into two sequential phases.
 
-![GaV Architecture](assets/architecture.png)
+![GaV Architecture](LAST_Methodology_Chart.drawio.png)
 *(Figure: Overview of the Guess-and-Verification Protocol)*
 
 ### Phase 1: Context Initialization
