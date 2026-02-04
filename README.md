@@ -134,15 +134,34 @@ We evaluated **GaV** on an industrial benchmark of real-world datasets from Snow
 
 > **Note:** Metrics are averaged across the benchmark datasets. Time represents the end-to-end processing duration per dataset.
 
-### 📝 Key Findings
+### 📝 Deep Dive & Key Findings
 
-The results highlight three critical insights regarding the **GaV** architecture:
+Our ablation study reveals critical insights into the interplay between Large Language Model reasoning and neuro-symbolic execution. By isolating the **Description** and **Verification** components, we observed four distinct behavioral patterns:
 
-1.  **Necessity of the Full Loop:** The **Vanilla** approach (standard LLM prompting) fails to capture column semantics reliably (~59% accuracy with GPT-5), proving that column understanding requires iterative reasoning and evidence gathering.
-2.  **Efficiency of the "Warm-Start":**
-    * The **Verifier Only** configuration is accurate but slow (e.g., 583s for GPT-5) because the lack of initial context forces the agent into costly refinement loops.
-    * **GaV (Ours)** uses the Description component to "warm-start" the verification. While this increases the input context, it significantly **reduces the total execution time** (e.g., down to 508s for GPT-5) and boosts accuracy to **87%**, as the Verifier starts with a stronger hypothesis.
-3.  **Cost-Effective Scalability:** Remarkably, **GaV with gpt-5-mini** achieves **82.0% accuracy**, outperforming the larger GPT-5 model in the "Description Only" setup (77%). This demonstrates that our agentic architecture enables smaller, cheaper models to perform effectively on complex industrial tasks.
+#### 1. The Limitations of Direct Reasoning (Vanilla Baseline)
+* **Configuration:** *No Description, No Verifier (Direct Prompting)*
+* **Observation:** This baseline relies purely on semantic inference from column names and headers. While it is the most efficient in terms of resources (fastest time, lowest token usage), it yields the lowest accuracy (**~59%** with GPT-5).
+* **Technical Insight:** The massive gap in accuracy compared to GaV (**-28%**) demonstrates that LLMs cannot reliably infer column semantics without grounding in actual data statistics. The lack of a feedback loop results in "semantic hallucinations," where the model confidentially asserts incorrect meanings based on superficial naming patterns.
+
+#### 2. The Hallucination Problem (Description Only)
+* **Configuration:** *Description ON, Verifier OFF*
+* **Observation:** Injecting statistical summaries (distributions, min/max values) significantly improves accuracy (**77%**) compared to the baseline.
+* **Technical Insight:** While the "Description" component provides necessary context, the absence of an execution-based verifier means the system cannot confirm its intuitions. The model creates a coherent narrative around the data but lacks the mechanism to perform **empirical validation**, leading to errors in ambiguous cases (e.g., distinguishing between *Created Date* vs *Updated Date* without checking value monotonicity).
+
+#### 3. The Cost of "Cold-Start" Verification (Verifier Only)
+* **Configuration:** *Description OFF, Verifier ON*
+* **Observation:** This configuration provides a massive accuracy boost (**81%**) but at the highest computational cost in terms of time (**583s**) and output tokens (**135k**).
+* **Technical Insight:** Without a preliminary description, the Verifier operates in a "Cold-Start" mode. The initial hypotheses are often weak or generic. Our log analysis reveals that this forces the **Data Analyst** agent into multiple costly **Refinement Loops**: the Verifier rejects the initial guess, requests new code execution, and iterates. This "trial-and-error" process explains the high output token consumption and extended execution time.
+
+#### 4. The "Warm-Start" Synergy (Ours - Full Architecture)
+* **Configuration:** *Description ON, Verifier ON*
+* **Observation:** Activating both components achieves the state-of-the-art accuracy (**87%**) while actually *reducing* execution time compared to the "Verifier Only" setup (~509s vs 583s).
+* **Technical Insight:** This result highlights a critical efficiency trade-off. Although the Description component increases the input context overhead (**~178k input tokens**), it acts as a **"Warm-Start" mechanism**. It primes the Generator with a high-quality context, leading to a much stronger initial hypothesis. Consequently, the Verifier accepts the hypothesis with significantly fewer refinement steps and fewer calls to the Data Analyst code interpreter. The initial investment in input tokens pays off by preventing expensive iterative corrections.
+
+### 💡 Conclusion: Architectural Robustness
+The full GaV architecture offers the optimal balance between precision and computational overhead.
+
+Crucially, this architectural robustness **democratizes high-end performance**. As shown in the results, the medium-sized **GPT-5-mini** model using GaV achieves **82% accuracy**, outperforming the larger GPT-5 model in the "Description Only" (77%) and "Vanilla" (59%) configurations. This proves that a well-designed **Agentic Workflow** (Generate $\rightarrow$ Verify $\rightarrow$ Refine) can compensate for the lower raw reasoning capabilities of smaller, more cost-effective models.
 
 ---
 
