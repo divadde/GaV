@@ -167,16 +167,17 @@ Crucially, this architectural robustness **democratizes high-end performance**. 
 
 ### 🔎 Qualitative Analysis: A Real-World Example
 
-To illustrate the contribution of each component, we present a comparison on the **FDIC Branch Locations** dataset.
-**Target Column:** `FDIC_INSTITUTION_CERTIFICATE_NUMBER`
-**Challenge:** Determining whether this "Number" is a unique row identifier, a license ID, or a grouping key.
+To illustrate the specific contribution of each component, we present a comparison on the **FDIC Branch Locations** dataset.
+
+* **Target Column:** `FDIC_INSTITUTION_CERTIFICATE_NUMBER`
+* **Ground Truth (Fact):** A unique certification identifier assigned by the FDIC. Verified to map 1:1 to `FDIC_INSTITUTION_ID`, serving as an alternative unique key for the institution entity.
 
 | Configuration | Prediction / Insight | Analysis of the Result |
 | :--- | :--- | :--- |
-| **Vanilla**<br>*(LLM Only)* | *"A unique numeric identifier assigned to each certificate. It serves as a primary key for the table."* | ❌ **Semantic Hallucination.** The model blindly assumes "ID/Number" columns are unique Primary Keys without looking at the data. It fails to recognize the hierarchical relationship (Bank $\to$ Branches). |
-| **Description Only**<br>*(Summary Stats)* | *"Integer column ranging from 58 to 99,999. It contains numeric codes representing the certificate. No null values observed."* | ⚠️ **Superficial.** The description is factually correct but lacks depth. It misses the *functional dependency*: it doesn't explain that multiple branches share the same certificate. |
-| **Verifier Only**<br>*(Code Execution)* | *"Values are NOT unique. 78,324 total rows but only 4,345 distinct values. The most common value '3510' appears 6,000 times."* | ⚠️ **Context-Free.** The agent correctly identifies the statistics (duplicates) but treats them as a negative finding ("Not a Key") rather than a semantic feature. It lacks the business context to interpret *what* those groups represent. |
-| **GaV (Ours)**<br>*(Full Architecture)* | *"Institution-level identifier. It functions as the **Institution Key**, identifying the chartered bank that owns the branch. **Observed Behavior:** Many branches share the same certificate (1:N relationship), consistent with an institution-level grouping key."* | ✅ **Perfect Understanding.** GaV combines the semantic hint ("Certificate" $\approx$ Bank License) with the statistical proof (1:N mapping) to correctly define the column as a Foreign Key for the Institution, resolving the ambiguity. |
+| **Vanilla**<br>*(LLM Only)* | *"A unique numeric identifier assigned to each row. It serves as the Primary Key for the branch records."* | ❌ **Semantic Hallucination.** The model relies solely on the column name ("Number/ID"). It blindly assumes it is a unique key for the table, failing to recognize that multiple branches can share the same bank certificate. |
+| **Description Only**<br>*(Summary Stats)* | *"Numeric column ranging from 58 to 99,999. It contains non-unique integer codes representing the certificate."* | ⚠️ **Superficial.** The description is statistically accurate (it notes the range and type) but lacks relational depth. It fails to identify the *functional dependency* (i.e., that this number identifies the *Bank*, not the *Branch*). |
+| **Verifier Only**<br>*(Code Execution)* | *"Data Analysis: Values are NOT unique. There are 78,324 rows but only 4,345 distinct values. The column cannot be used as a Primary Key."* | ⚠️ **Context-Free.** The agent correctly executes code to find duplicates, but interprets this as a negative result ("Not a Key"). Without the semantic "warm-start," it misses that the duplicates are a feature (grouping key) rather than a bug. |
+| **GaV (Ours)**<br>*(Full Architecture)* | *"**Institution-level identifier.** It functions as the Institution Key, identifying the chartered bank that owns the branch.<br><br>**Observed behavior:**<br>• Many branches share the same certificate (4,345 certs vs 78,324 branches), consistent with an institution-level key.<br>• **Maps 1:1 to `FDIC_INSTITUTION_ID`** and `INSTITUTION_NAME`.<br>• Use to group/aggregate branch rows by institution."* | ✅ **Perfect Understanding.** GaV combines the semantic hint ("Certificate" $\approx$ Bank License) with deep data verification. It explicitly discovers the **1:1 mapping** with the Institution ID, correctly classifying it as a Foreign Key for the institution entity. |
 
 ---
 
