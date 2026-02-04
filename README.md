@@ -14,23 +14,31 @@ The benchmark allows researchers to evaluate and develop systems capable of gene
 
 ---
 
+## 🏙️ Data Source & Benchmark Composition
+
+To ensure a rigorous evaluation relevant to the **ICDE Industrial Track**, we constructed a composite benchmark spanning two distinct data distributions. This dual-source approach addresses the need for testing both "in-the-wild" dirty data and structured industrial schemas.
+
+### 1. Municipal & Civic Domain (NYC Open Data)
+The core of the benchmark is derived from the **NYC Open Data** portal. This subset represents the "Socio-Science" and public administration domain, challenging the model with high ambiguity, messy formatting, and diverse civic topics.
+
+* **Original Portal:** [NYC Open Data](https://opendata.cityofnewyork.us/)
+* **Curated Subset (ABCU):** [📂 Download Benchmark Data](https://drive.google.com/drive/folders/1emdGsmkhdfj8Da3ozuYLvMQpDbfgamAD?usp=sharing)
+
+### 2. Industrial & Commercial Domain (Snowflake Source)
+To expand domain coverage beyond civic data and test applicability in enterprise environments, we integrated a new subset sourced from **Snowflake Marketplace** and real-world regulatory data.
+
+* **Focus:** Business-critical schemas requiring specific domain knowledge.
+* **Key Characteristic:** Unlike flat open data, these datasets introduce complex schema relationships (e.g., 1:N mappings, foreign key validations) that require deep semantic verification.
+
+---
+
 ## 📂 Repository Structure
 
 ```
 Column Meaning Ontology.pdf        # definitions and examples of the 7 ontology types
-v2_final_attributes_json.json              # human-annotated benchmark data
+v2_final_attributes_json.json              # human-annotated benchmark data on NYC Open Data
+industrial_benchmark_attributes.json        #human-annotated benchmark data from Snowflake source
 ```
-
----
-
-## 🏙️ Data Source
-
-All datasets used in ABCU are derived from the **NYC Open Data** portal:  
-👉 https://opendata.cityofnewyork.us/  
-
-A curated subset of heterogeneous municipal datasets was selected to ensure domain diversity, schema complexity, and richness of attribute semantics. 
-The subset of ABCU can be found here:
-👉 https://drive.google.com/drive/folders/1emdGsmkhdfj8Da3ozuYLvMQpDbfgamAD?usp=sharing
 
 ---
 
@@ -50,9 +58,9 @@ All facets, along with examples and annotation guidelines, are detailed in `Colu
 
 ---
 
-## 🧾 Annotation Format
+## 🧾 Annotation Format (tobe modified)
 
-The benchmark annotations are stored in a single JSON file, `v2_final_attributes_json.json`, following this structure:
+The benchmark annotations are stored in the JSON files, `v2_final_attributes_json.json` and `industrial_benchmark_attributes.json`, following this structure:
 
 ```json
 [
@@ -91,6 +99,14 @@ Annotators analyzed:
 
 Each annotation expresses a **verifiable hypothesis** about the attribute’s semantics, grounded in the actual dataset content.  
 All statements underwent review for **semantic correctness, clarity, and grounding**.
+
+---
+
+# benchmark statistics
+
+---
+
+# brief description of the workflow with image
 
 ---
 
