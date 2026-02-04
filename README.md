@@ -165,6 +165,21 @@ Crucially, this architectural robustness **democratizes high-end performance**. 
 
 ---
 
+### 🔎 Qualitative Analysis: A Real-World Example
+
+To illustrate the contribution of each component, we present a comparison on the **FDIC Branch Locations** dataset.
+**Target Column:** `FDIC_INSTITUTION_CERTIFICATE_NUMBER`
+**Challenge:** Determining whether this "Number" is a unique row identifier, a license ID, or a grouping key.
+
+| Configuration | Prediction / Insight | Analysis of the Result |
+| :--- | :--- | :--- |
+| **Vanilla**<br>*(LLM Only)* | *"A unique numeric identifier assigned to each certificate. It serves as a primary key for the table."* | ❌ **Semantic Hallucination.** The model blindly assumes "ID/Number" columns are unique Primary Keys without looking at the data. It fails to recognize the hierarchical relationship (Bank $\to$ Branches). |
+| **Description Only**<br>*(Summary Stats)* | *"Integer column ranging from 58 to 99,999. It contains numeric codes representing the certificate. No null values observed."* | ⚠️ **Superficial.** The description is factually correct but lacks depth. It misses the *functional dependency*: it doesn't explain that multiple branches share the same certificate. |
+| **Verifier Only**<br>*(Code Execution)* | *"Values are NOT unique. 78,324 total rows but only 4,345 distinct values. The most common value '3510' appears 6,000 times."* | ⚠️ **Context-Free.** The agent correctly identifies the statistics (duplicates) but treats them as a negative finding ("Not a Key") rather than a semantic feature. It lacks the business context to interpret *what* those groups represent. |
+| **GaV (Ours)**<br>*(Full Architecture)* | *"Institution-level identifier. It functions as the **Institution Key**, identifying the chartered bank that owns the branch. **Observed Behavior:** Many branches share the same certificate (1:N relationship), consistent with an institution-level grouping key."* | ✅ **Perfect Understanding.** GaV combines the semantic hint ("Certificate" $\approx$ Bank License) with the statistical proof (1:N mapping) to correctly define the column as a Foreign Key for the Institution, resolving the ambiguity. |
+
+---
+
 ## 🎯 Intended Use
 
 ABCU is intended for evaluating and developing systems that perform:
