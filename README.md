@@ -110,7 +110,7 @@ To validate GaV in enterprise scenarios, we analyzed the specific properties of 
 | Metric | Value | Interpretation |
 | :--- | :--- | :--- |
 | **Total Datasets** | 20 | Diverse industrial verticals |
-| **Total Annotations** | 212 | Columns with human-verified ground truth for semantic verification |
+| **Total Annotations** | 212 | Facts over columns annotated by humans for semantic verification |
 | **Avg. Description Length** | ~35 words | High semantic density (requires rich explanations) |
 
 #### 🌐 Domain Coverage
@@ -143,7 +143,7 @@ The core of our benchmark comprises 26 datasets from the NYC Open Data portal. T
 | Metric | Value | Interpretation |
 | :--- | :--- | :--- |
 | **Total Datasets** | 26 | Wide variety of civic topics |
-| **Total Annotations** | 314 | Columns with human-verified ground truth for semantic verification |
+| **Total Annotations** | 314 | Facts over columns annotated by humans for semantic verification |
 | **Avg. Description Length** | **~66 words** | Extremely high verbosity (descriptions often include legal/administrative context) |
 
 #### 🌐 Domain Coverage
