@@ -227,16 +227,16 @@ We evaluated **GaV** on an industrial benchmark of real-world datasets from Snow
 | Configuration | Model | Accuracy | Input Tokens | Output Tokens | Time |
 |:---|:---|:---:|:---:|:---:|:---:|
 | **Vanilla** (Direct Prompt) | qwen-plus | 42.0% | 36k | 2k | 5s |
-| | qwen-plus (thinking) | 53.0% | 46k | 13k | 51s |
+| | qwen-plus (thinking) | 53.0% | 36k | 13k | 51s |
 | | qwen3-max | 43.0% | 36k | 1k | 7s |
 | **Description Only** (No Verifier) | qwen-plus | 56.0% | 69k | 3k | 20s |
-| | qwen-plus (thinking) | 68.0% | 96k | 48k | 173s |
+| | qwen-plus (thinking) | 68.0% | 80k | 40k | 173s |
 | | qwen3-max | 59.0% | 67k | 3k | 34s |
 | **Verifier Only** (No Description) | qwen-plus | 57.0% | 135k | 34k | 101s |
-| | qwen-plus (thinking) | 71.0% | 118k | 183k | 531s |
+| | qwen-plus (thinking) | 71.0% | 130k | 183k | 531s |
 | | qwen3-max | 59.0% | 122k | 25k | 151s |
 | **GaV (Ours)** | **qwen-plus** | **61.0%** | **168k** | **36k** | **126s** |
-| | **qwen-plus (thinking)**| **75.0%** | **169k** | **186k** | **502s** |
+| | **qwen-plus (thinking)**| **75.0%** | **169k** | **186k** | **480s** |
 | | **qwen3-max** | **63.0%** | **153k** | **26k** | **209s** |
 
 > **Note:** Metrics are averaged across the benchmark datasets. Time represents the end-to-end processing duration per dataset.
@@ -293,7 +293,7 @@ To illustrate the specific contribution of each component, we present a comparis
 Following the feedback from the ICDE review process, we provide an extended analysis of specific architectural behaviors, hyperparameter sensitivity, and the ablation of the verification components.
 
 ### 1. Sensitivity of Verification Rounds (`max_steps`)
-A key hyperparameter in GaV is the maximum number of refinement rounds allowed for the Verifier agent. Our log analysis reveals that this is not a static parameter but depends heavily on **Model Personality** and **Context Quality**.
+A key hyperparameter in GaV is the maximum number of refinement rounds allowed for the Verifier agent. Our log deep analysis reveals that this is not a static parameter but depends heavily on **Model Personality** and **Context Quality**.
 
 * **Model Sensitivity (Skepticism Level):** We observed distinct behavioral patterns across model families. **GPT-5** tends to be more decisive, maintaining a relatively low rejection rate of **~7.1%**. In contrast, **Qwen-Plus-Thinking** exhibits significantly higher "skepticism," with a rejection rate of **23.9%**. This indicates that specific "reasoner" models are more prone to challenging hypotheses, requiring a higher `max_steps` setting to allow for rigorous iterative verification.
 
@@ -304,15 +304,19 @@ A key hyperparameter in GaV is the maximum number of refinement rounds allowed f
 ### 2. The "Easy" vs. "Hard" Classification Dilemma
 The Verifier agent autonomously decides whether a verification task is "Easy" (solvable via metadata/reflection) or "Hard" (requires Python code execution).
 
-* **Behavior of Non-Reasoner Models:** Models like `qwen-plus` (without thinking mode) tend to **underestimate complexity**. They frequently classify ambiguous tasks as "Easy," bypassing the Data Analyst to save tokens. While this reduces cost, it leads to superficial verification and lower accuracy. Indeed, it was observed that non-reasoning models from Qwen family have a higher ration of **15%** of easy classifications.
+* **Behavior of Non-Reasoner Models:** Models like `qwen-plus` (without thinking mode) tend to **underestimate complexity**. They frequently classify ambiguous tasks as "Easy," bypassing the Data Analyst to save tokens. While this reduces cost, it leads to superficial verification and lower accuracy. Indeed, it was observed that non-reasoning models from Qwen family have a higher ratio of **15%** of easy classifications.
 * **Valid "Easy" Cases:** The "Easy" path is legitimate only when the hypothesis is trivial or directly verifiable against the statistical summary provided by the Description component (e.g., checking value ranges or null counts).
 
 ### 3. Ablation: Why "Reflection" is Not Enough
-We investigated the necessity of the **Data Analyst** (Code Execution) compared to a simple "Reflection" mechanism (LLM self-correction without tools).
+We deeply investigated the necessity of the **Data Analyst** (Code Execution) compared to a simple "Reflection" mechanism (LLM self-correction without tools).
 
 * **Reflection (Verifier without Tools):** As established in recent literature, self-reflection helps reduce syntax errors and basic hallucinations. However, our ablation study confirms that for **Data Profiling**, reflection is insufficient. An LLM cannot "think" its way to the truth about a dataset's distribution or hidden constraints.
 * **Execution (Verifier with Data Analyst):** The ability to execute code allows the system to empirically validate specific constraints (e.g., *"Is this truly a Foreign Key?"*, *"Are dates strictly sequential?"*).
     * *Result:* Disabling the Data Analyst forces the system into a "Reflection-Only" mode, which fails to capture granular semantic details, reverting to the performance levels of the "Description Only" configuration.
+ 
+I risultati qui presenti in tabella, confermano un leggero aumento delle performance rispetto alla solo componente descrittivo, ma performance in generale inferiori rispetto a utilizzare completamente il Data-Analyst:
+
+
       
 ---
 
