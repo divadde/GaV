@@ -304,7 +304,7 @@ A key hyperparameter in GaV is the maximum number of refinement rounds allowed f
 ### 2. The "Easy" vs. "Hard" Classification Dilemma
 The Verifier agent autonomously decides whether a verification task is "Easy" (solvable via metadata/reflection) or "Hard" (requires Python code execution).
 
-* **Behavior of Non-Reasoner Models:** Models like `qwen-plus` (without thinking mode) tend to **underestimate complexity**. They frequently classify ambiguous tasks as "Easy," bypassing the Data Analyst to save tokens. While this reduces cost, it leads to superficial verification and lower accuracy. Indeed, it was observed that non-reasoning model from Qwen family have a higher ration of **15%** of easy classifications.
+* **Behavior of Non-Reasoner Models:** Models like `qwen-plus` (without thinking mode) tend to **underestimate complexity**. They frequently classify ambiguous tasks as "Easy," bypassing the Data Analyst to save tokens. While this reduces cost, it leads to superficial verification and lower accuracy. Indeed, it was observed that non-reasoning models from Qwen family have a higher ration of **15%** of easy classifications.
 * **Valid "Easy" Cases:** The "Easy" path is legitimate only when the hypothesis is trivial or directly verifiable against the statistical summary provided by the Description component (e.g., checking value ranges or null counts).
 
 ### 3. Ablation: Why "Reflection" is Not Enough
