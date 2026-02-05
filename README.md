@@ -157,15 +157,15 @@ The civic benchmark covers the critical infrastructure of a metropolis:
 #### 🧠 Semantic Aspect Distribution
 Unlike the industrial subset which focuses on values and types, the civic subset requires strong **Entity Interpretation** (understanding what a "Zone" or "District" effectively means in a city context).
 
-| Semantic Aspect | Share ||
+| Semantic Aspect | Share |
 | :--- | :--- | :--- |
-| **Entity Meaning** | **23.9%** ||
-| **Value Semantics** | **18.8%** ||
-| **Value Representation** | **17.8%** ||
-| **Relational Context** | **14.7%** ||
-| **Temporal Scope** | **13.1%** ||
-| **Aggregation/Derivation** | **7.3%** ||
-| **Row Context** | **4.4%** ||
+| **Entity Meaning** | **23.9%** |
+| **Value Semantics** | **18.8%** |
+| **Value Representation** | **17.8%** |
+| **Relational Context** | **14.7%** |
+| **Temporal Scope** | **13.1%** |
+| **Aggregation/Derivation** | **7.3%** |
+| **Row Context** | **4.4%** |
 
 ---
 
