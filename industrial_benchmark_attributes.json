@@ -1070,58 +1070,114 @@
         ]
     },
     {
-  "dataset_name": "CANADA_STATCAN_ATTRIBUTES.csv",
-  "labels": [
-    [
-      "VARIABLE",
-      "Entity or Attribute Meaning",
-      "Acts as the primary key and unique identifier for the statistical time series. Verified to be unique across the observed rows. It serves as the machine-readable handle for joining with the actual data values in associated tables."
-    ],
-    [
-      "VARIABLE",
-      "Aggregation and Derivation",
-      "Strictly derived from 'VARIABLE_NAME' via a slugification process. Code analysis confirms a pattern where spaces in 'VARIABLE_NAME' are replaced by underscores and special characters (like colons or commas) are either preserved or escaped, ensuring a URL-safe format."
-    ],
-    [
-      "VARIABLE_NAME",
-      "Entity or Attribute Meaning",
-      "The human-readable, descriptive label for the statistic. It semantically encapsulates multiple dimensions including the subject (e.g., 'GDP'), the specific sector (e.g., 'Motor vehicle wholesalers'), and the valuation method (e.g., 'Chained 2017 CAD')."
-    ],
-    [
-      "SEASONALLY_ADJUSTED",
-      "Aggregation and Derivation",
-      "A boolean flag indicating statistical processing. 'True' signifies the series has been mathematically adjusted to remove seasonal components (like holiday effects), whereas 'False' represents unadjusted, raw data. This constitutes a transformation of the underlying measurement."
-    ],
-    [
-      "FREQUENCY",
-      "Temporal Scope",
-      "Defines the periodicity of the data capture. Observed values include 'Monthly', 'Annual', and 'Quinquennial'. This column dictates the temporal granularity and the expected interval between valid data points in the linked time series."
-    ],
-    [
-      "UNIT",
-      "Value Representation",
-      "Specifies the unit of measure and scaling factor for the variable. The column is polymorphic, containing indices (e.g., '2002=100'), currency with base years (e.g., 'Chained 2017 CAD', '2023 Constant CAD'), and physical counts (e.g., 'Number', 'Persons')."
-    ],
-    [
-      "NAICS",
-      "Relational Context",
-      "References the 'North American Industry Classification System'. This column connects the variable to a standard industrial taxonomy. It is populated primarily for GDP and employment records (e.g., 'Motor vehicle...'), while remaining null for aggregate indices like CPI."
-    ],
-    [
-      "REPORT",
-      "Relational Context",
-      "Acts as a grouping dimension or foreign key concept, linking the individual variable to its parent statistical program or publication (e.g., 'Gross Domestic Product', 'Consumer Price Index'). It defines the thematic collection to which the variable belongs."
-    ],
-    [
-      "DISCONTINUED",
-      "Temporal Scope",
-      "A lifecycle status indicator. 'True' implies the time series is no longer updated or active, defining the end of its temporal validity. 'False' indicates an ongoing, active series."
-    ],
-    [
-      "TREND_CYCLE",
-      "Value Semantics",
-      "A boolean attribute distinguishing trend-cycle estimates from standard series. When 'True', the value represents a smoothed version of the seasonally adjusted series, filtering out irregular or random noise, thus providing a specific semantic view of the data's movement."
-    ]
-  ]
-}
+      "dataset_name": "LIGHTCAST__JOB_POSTINGS_GLOBAL",
+      "dataset_description":"This dataset tracks global workforce trends by capturing over 400,000 new job postings daily across 41 countries from diverse job boards and career sites. Providing both real-time and historical insights, it enables granular analysis of skill demand, hiring activity, and posting durations. With detailed records on specific skills and taxonomies, this resource empowers policy makers and talent strategists to navigate and analyze the dynamic global labor market with precision.",
+      "labels": [
+        [
+          "SALARY_AVERAGE",
+          "Aggregation and Derivation",
+          "Strictly calculated as the arithmetic mean of 'SALARY_FROM' and 'SALARY_TO'. This mathematical relationship (Average = (From + To) / 2) is verified to hold true for 100% of non-null records. It represents the midpoint of the offered compensation range, standardized to USD."
+        ],
+        [
+          "LOCATION",
+          "Value Representation",
+          "Stores geospatial coordinates structured as a JSON object (e.g., '{\"lat\": 25.204..., \"lon\": 55.270...}') rather than a simple location string. Verified that 100% of non-null values are parsable JSON containing 'lat' and 'lon' keys."
+        ],
+        [
+          "ID",
+          "Entity or Attribute Meaning",
+          "Acts as the unique Primary Key for each job posting. The values are 40-character hexadecimal strings (matching regex `^[0-9a-f]{40}$`), likely generated via a SHA-1 hash algorithm to ensure global uniqueness."
+        ],
+        [
+          "SALARY_FROM",
+          "Derivation and Aggregation",
+          "Represents the annualized lower bound of the salary, standardized to USD. Forensic analysis of 'ORIGINAL_SALARY_FROM' and 'ORIGINAL_PAY_PERIOD' confirms this value is derived by annualizing the local pay (e.g., Hourly × 2080) and converting it to USD."
+        ],
+        [
+          "SKILLS",
+          "Relational Context",
+          "Contains a JSON array of unique identifiers (e.g., 'KS120...') representing the required skills. Verified to maintain a strict 1-to-1 index correspondence with the 'SKILLS_NAME' column, serving as foreign keys to a skill taxonomy."
+        ],
+        [
+          "BODY",
+          "Value Representation",
+          "Contains the unstructured raw text of the job description, heavily mixed with HTML tags (e.g., `<ul>`, `<li>`, `<p>`). Requires parsing to extract clean text for NLP tasks."
+        ],
+        [
+          "LOT_V6_OCCUPATION_NAME",
+          "Relational Context",
+          "Represents the occupation classification under a specific version (V6) of the taxonomy. Forensics reveal instances of divergence from 'LOT_OCCUPATION_NAME' (e.g., 'Financial Operations Specialist' vs 'Accounting Clerk'), indicating a mapping or migration layer between taxonomy versions."
+        ],
+        [
+          "ORIGINAL_SALARY_FROM",
+          "Aggregation and Derivation",
+          "Represents the annualized salary in the local currency (`ORIGINAL_CURRENCY`). Unlike a raw rate, this value is pre-calculated based on the `ORIGINAL_PAY_PERIOD` (e.g., if Period='month', this value is exactly Monthly Rate × 12). Verified in 100% of sample rows."
+        ],
+        [
+          "LAST_UPDATED_TIMESTAMP",
+          "Temporal Scope",
+          "Defines the specific instant of the last record modification, formatted as an ISO 8601 timestamp with timezone offset (e.g., `2025-12-19 09:12:00...`). It represents a system-level audit trail rather than the business-level posting date."
+        ],
+        [
+          "EXPIRED",
+          "Temporal Scope",
+          "Represents the date when the job posting was closed or removed. Verified to always occur on or after the 'POSTED' date (Duration >= 0 days), marking the end of the validity period for the vacancy."
+        ]
+      ]
+    },
+    {
+      "dataset_name": "CANADA_STATCAN_ATTRIBUTES.csv",
+      "labels": [
+        [
+          "VARIABLE",
+          "Entity or Attribute Meaning",
+          "Acts as the primary key and unique identifier for the statistical time series. Verified to be unique across the observed rows. It serves as the machine-readable handle for joining with the actual data values in associated tables."
+        ],
+        [
+          "VARIABLE",
+          "Aggregation and Derivation",
+          "Strictly derived from 'VARIABLE_NAME' via a slugification process. Code analysis confirms a pattern where spaces in 'VARIABLE_NAME' are replaced by underscores and special characters (like colons or commas) are either preserved or escaped, ensuring a URL-safe format."
+        ],
+        [
+          "VARIABLE_NAME",
+          "Entity or Attribute Meaning",
+          "The human-readable, descriptive label for the statistic. It semantically encapsulates multiple dimensions including the subject (e.g., 'GDP'), the specific sector (e.g., 'Motor vehicle wholesalers'), and the valuation method (e.g., 'Chained 2017 CAD')."
+        ],
+        [
+          "SEASONALLY_ADJUSTED",
+          "Aggregation and Derivation",
+          "A boolean flag indicating statistical processing. 'True' signifies the series has been mathematically adjusted to remove seasonal components (like holiday effects), whereas 'False' represents unadjusted, raw data. This constitutes a transformation of the underlying measurement."
+        ],
+        [
+          "FREQUENCY",
+          "Temporal Scope",
+          "Defines the periodicity of the data capture. Observed values include 'Monthly', 'Annual', and 'Quinquennial'. This column dictates the temporal granularity and the expected interval between valid data points in the linked time series."
+        ],
+        [
+          "UNIT",
+          "Value Representation",
+          "Specifies the unit of measure and scaling factor for the variable. The column is polymorphic, containing indices (e.g., '2002=100'), currency with base years (e.g., 'Chained 2017 CAD', '2023 Constant CAD'), and physical counts (e.g., 'Number', 'Persons')."
+        ],
+        [
+          "NAICS",
+          "Relational Context",
+          "References the 'North American Industry Classification System'. This column connects the variable to a standard industrial taxonomy. It is populated primarily for GDP and employment records (e.g., 'Motor vehicle...'), while remaining null for aggregate indices like CPI."
+        ],
+        [
+          "REPORT",
+          "Relational Context",
+          "Acts as a grouping dimension or foreign key concept, linking the individual variable to its parent statistical program or publication (e.g., 'Gross Domestic Product', 'Consumer Price Index'). It defines the thematic collection to which the variable belongs."
+        ],
+        [
+          "DISCONTINUED",
+          "Temporal Scope",
+          "A lifecycle status indicator. 'True' implies the time series is no longer updated or active, defining the end of its temporal validity. 'False' indicates an ongoing, active series."
+        ],
+        [
+          "TREND_CYCLE",
+          "Value Semantics",
+          "A boolean attribute distinguishing trend-cycle estimates from standard series. When 'True', the value represents a smoothed version of the seasonally adjusted series, filtering out irregular or random noise, thus providing a specific semantic view of the data's movement."
+        ]
+      ]
+    }
 ]
