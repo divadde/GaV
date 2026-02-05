@@ -158,7 +158,7 @@ The civic benchmark covers the critical infrastructure of a metropolis:
 Unlike the industrial subset which focuses on values and types, the civic subset requires strong **Entity Interpretation** (understanding what a "Zone" or "District" effectively means in a city context).
 
 | Semantic Aspect | Share |
-| :--- | :--- | :--- |
+| :--- | :--- |
 | **Entity Meaning** | **23.9%** |
 | **Value Semantics** | **18.8%** |
 | **Value Representation** | **17.8%** |
