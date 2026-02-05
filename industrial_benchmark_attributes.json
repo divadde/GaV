@@ -1068,5 +1068,60 @@
             "Defines the temporal horizon of the forecast validity. The difference in days between this column and 'TIME_INIT_UTC' calculates the 'Lead Time' (forecast horizon) which varies progressively throughout the dataset."
             ]
         ]
-    }
+    },
+    {
+  "dataset_name": "CANADA_STATCAN_ATTRIBUTES.csv",
+  "labels": [
+    [
+      "VARIABLE",
+      "Entity or Attribute Meaning",
+      "Acts as the primary key and unique identifier for the statistical time series. Verified to be unique across the observed rows. It serves as the machine-readable handle for joining with the actual data values in associated tables."
+    ],
+    [
+      "VARIABLE",
+      "Aggregation and Derivation",
+      "Strictly derived from 'VARIABLE_NAME' via a slugification process. Code analysis confirms a pattern where spaces in 'VARIABLE_NAME' are replaced by underscores and special characters (like colons or commas) are either preserved or escaped, ensuring a URL-safe format."
+    ],
+    [
+      "VARIABLE_NAME",
+      "Entity or Attribute Meaning",
+      "The human-readable, descriptive label for the statistic. It semantically encapsulates multiple dimensions including the subject (e.g., 'GDP'), the specific sector (e.g., 'Motor vehicle wholesalers'), and the valuation method (e.g., 'Chained 2017 CAD')."
+    ],
+    [
+      "SEASONALLY_ADJUSTED",
+      "Aggregation and Derivation",
+      "A boolean flag indicating statistical processing. 'True' signifies the series has been mathematically adjusted to remove seasonal components (like holiday effects), whereas 'False' represents unadjusted, raw data. This constitutes a transformation of the underlying measurement."
+    ],
+    [
+      "FREQUENCY",
+      "Temporal Scope",
+      "Defines the periodicity of the data capture. Observed values include 'Monthly', 'Annual', and 'Quinquennial'. This column dictates the temporal granularity and the expected interval between valid data points in the linked time series."
+    ],
+    [
+      "UNIT",
+      "Value Representation",
+      "Specifies the unit of measure and scaling factor for the variable. The column is polymorphic, containing indices (e.g., '2002=100'), currency with base years (e.g., 'Chained 2017 CAD', '2023 Constant CAD'), and physical counts (e.g., 'Number', 'Persons')."
+    ],
+    [
+      "NAICS",
+      "Relational Context",
+      "References the 'North American Industry Classification System'. This column connects the variable to a standard industrial taxonomy. It is populated primarily for GDP and employment records (e.g., 'Motor vehicle...'), while remaining null for aggregate indices like CPI."
+    ],
+    [
+      "REPORT",
+      "Relational Context",
+      "Acts as a grouping dimension or foreign key concept, linking the individual variable to its parent statistical program or publication (e.g., 'Gross Domestic Product', 'Consumer Price Index'). It defines the thematic collection to which the variable belongs."
+    ],
+    [
+      "DISCONTINUED",
+      "Temporal Scope",
+      "A lifecycle status indicator. 'True' implies the time series is no longer updated or active, defining the end of its temporal validity. 'False' indicates an ongoing, active series."
+    ],
+    [
+      "TREND_CYCLE",
+      "Value Semantics",
+      "A boolean attribute distinguishing trend-cycle estimates from standard series. When 'True', the value represents a smoothed version of the seasonally adjusted series, filtering out irregular or random noise, thus providing a specific semantic view of the data's movement."
+    ]
+  ]
+}
 ]
