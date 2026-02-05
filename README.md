@@ -166,8 +166,6 @@ Unlike the industrial subset which focuses on values and types, the civic subset
 | **Temporal Scope** | **13.1%** | Validity windows of permits and licenses |
 | **Aggregation/Derivation** | **7.3%** | Understanding calculated metrics (e.g., *Total Students*) |
 
-> **Comparison:** Note that the **Average Description Length** here (66 words) is nearly double that of the Industrial subset (35 words), confirming that "in-the-wild" public data requires significantly more verbose and contextual reasoning to be fully understood.
-
 ---
 
 ## 🚀 Architecture & Workflow
@@ -205,7 +203,7 @@ This **Generate $\rightarrow$ Verify $\rightarrow$ Refine** loop ensures that ev
 
 ## 📊 Experimental Results
 
-We evaluated **GaV** on an industrial benchmark of real-world datasets from Snowflake source, comparing different LLM backbones and architectural configurations. The table below reports the average performance metrics extracted from our experiments.
+We evaluated **GaV** on an industrial benchmark of real-world datasets from Snowflake source and the civic domain benchmark of NYC Open Data source, and from  comparing different LLM backbones and architectural configurations. The table below reports the average performance metrics extracted from our experiments.
 
 ### 🤖 GPT Family Performance
 
@@ -245,7 +243,7 @@ We evaluated **GaV** on an industrial benchmark of real-world datasets from Snow
 
 ### 📝 Deep Dive & Key Findings
 
-Our ablation study reveals critical insights into the interplay between Large Language Model reasoning and neuro-symbolic execution. By isolating the **Description** and **Verification** components, we observed four distinct behavioral patterns:
+Our ablation study reveals critical insights into the interplay between Large Language Model reasoning capabilities. By isolating the **Description** and **Verification** components, we observed four distinct behavioral patterns:
 
 #### 1. The Limitations of Direct Reasoning (Vanilla Baseline)
 * **Configuration:** *No Description, No Verifier (Direct Prompting)*
