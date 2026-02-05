@@ -104,24 +104,23 @@ All statements underwent review for **semantic correctness, clarity, and groundi
 
 ### 🏭 Industrial Subset Statistics (Snowflake Source)
 
-To validate GaV in enterprise scenarios, we analyzed the specific properties of the 19 datasets sourced from the Snowflake Marketplace and regulatory bodies. This subset is designed to test the model against rigorous business schemas and domain-specific terminology.
+To validate GaV in enterprise scenarios, we analyzed the specific properties of the 20 datasets sourced from the Snowflake Marketplace and regulatory bodies. This subset is designed to test the model against rigorous business schemas and domain-specific terminology.
 
 #### 📈 Key Metrics
 | Metric | Value | Interpretation |
 | :--- | :--- | :--- |
-| **Total Datasets** | 19 | Diverse industrial verticals |
-| **Annotated Attributes** | 196 | Target columns for semantic verification |
+| **Total Datasets** | 20 | Diverse industrial verticals |
+| **Annotated Attributes** | 206 | Columns with human-verified ground truth for semantic verification |
 | **Avg. Description Length** | ~35 words | High semantic density (requires rich explanations) |
-| **Ambiguous Headers** | 14 | Recurring generic names (e.g., `UNIT`, `VARIABLE`, `ID`) that require context to resolve |
 
 #### 🌐 Domain Coverage
 The industrial benchmark is not limited to a single vertical but spans critical enterprise sectors:
 
-* **💰 Finance & Banking:** FDIC Branch Locations, SEC Financial Analytics, CFPB Complaints.
-* **🏥 Healthcare & Life Sciences:** COVID-19 Epidemiological Data, Hospital Claims/Remits.
-* **🚚 Supply Chain & Infrastructure:** DOT Transportation Statistics, EIA Energy Attributes, Bureau of Labor Statistics.
-* **📍 Location & Demographics:** FEMA Disaster Areas, OpenCellID, Demographics Data.
-* **☁️ Weather & Environment:** Dutch Weather Data, Global Environmental Attributes.
+* **💰 Finance & Banking:** FDIC Branch Locations, SEC Financial Analytics, CFPB Complaints. (4 datasets)
+* **🏥 Healthcare & Life Sciences:** COVID-19 Epidemiological Data, Hospital Claims/Remits. (3 datasets)
+* **🚚 Supply Chain & Infrastructure:** DOT Transportation Statistics, EIA Energy Attributes, Bureau of Labor Statistics. (6 datasets)
+* **📍 Location & Demographics:** FEMA Disaster Areas, OpenCellID, Demographics Data. (5 datasets)
+* **☁️ Weather & Environment:** Dutch Weather Data, Global Environmental Attributes. (2 datasets)
 
 #### 🧠 Semantic Aspect Distribution
 The annotations are balanced across the ABCU ontology, ensuring the model is tested on multiple dimensions of understanding:
@@ -133,9 +132,7 @@ The annotations are balanced across the ABCU ontology, ensuring the model is tes
 | **Entity Meaning** | **17.8%** | Real-world entity mapping (e.g., *"Is this ID for the Bank or the Branch?"*) |
 | **Relational Context** | **12.4%** | Foreign keys and functional dependencies |
 | **Temporal Scope** | **12.4%** | Time validity and granularity |
-| **Aggregation/Derivation** | **10.4%** | Formulas and calculated fields |
-
-> **Observation:** The high percentage of *Value Semantics* and *Relational Context* confirms that this benchmark moves beyond simple schema matching, requiring deep inspection of data content and relationships.
+| **Aggregation/Derivation** | **10.4%** | Formulas and calculated fields from other attributes |
 
 
 ### 🏛️ Municipal Subset Statistics (NYC Open Data)
@@ -146,9 +143,8 @@ The core of our benchmark comprises 26 datasets from the NYC Open Data portal. T
 | Metric | Value | Interpretation |
 | :--- | :--- | :--- |
 | **Total Datasets** | 26 | Wide variety of civic topics |
-| **Annotated Attributes** | 283 | Columns with human-verified ground truth |
+| **Annotated Attributes** | 283 | Columns with human-verified ground truth for semantic verification |
 | **Avg. Description Length** | **~66 words** | Extremely high verbosity (descriptions often include legal/administrative context) |
-| **Ambiguous Headers** | 39 | Frequent generic names (e.g., `Borough`, `Latitude`, `Code`) requiring row-level analysis |
 
 #### 🌐 Domain Coverage
 The civic benchmark covers the critical infrastructure of a metropolis:
