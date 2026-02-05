@@ -233,10 +233,10 @@ We evaluated **GaV** on an industrial benchmark of real-world datasets from Snow
 | | qwen-plus (thinking) | 68.0% | 96k | 48k | 173s |
 | | qwen3-max | 59.0% | 67k | 3k | 34s |
 | **Verifier Only** (No Description) | qwen-plus | 57.0% | 135k | 34k | 101s |
-| | qwen-plus (thinking) | 71.0% | 118k | 173k | 531s |
+| | qwen-plus (thinking) | 71.0% | 118k | 183k | 531s |
 | | qwen3-max | 59.0% | 122k | 25k | 151s |
 | **GaV (Ours)** | **qwen-plus** | **61.0%** | **168k** | **36k** | **126s** |
-| | **qwen-plus (thinking)**| **75.0%** | **169k** | **196k** | **522s** |
+| | **qwen-plus (thinking)**| **75.0%** | **169k** | **186k** | **502s** |
 | | **qwen3-max** | **63.0%** | **153k** | **26k** | **209s** |
 
 > **Note:** Metrics are averaged across the benchmark datasets. Time represents the end-to-end processing duration per dataset.
@@ -248,22 +248,22 @@ Our ablation study reveals critical insights into the interplay between Large La
 #### 1. The Limitations of Direct Reasoning (Vanilla Baseline)
 * **Configuration:** *No Description, No Verifier (Direct Prompting)*
 * **Observation:** This baseline relies purely on semantic inference from column names and headers. While it is the most efficient in terms of resources (fastest time, lowest token usage), it yields the lowest accuracy (**~59%** with GPT-5).
-* **Technical Insight:** The massive gap in accuracy compared to GaV (**-28%**) demonstrates that LLMs cannot reliably infer column semantics without grounding in actual data statistics. The lack of a feedback loop results in "semantic hallucinations," where the model confidentially asserts incorrect meanings based on superficial naming patterns.
+* **Technical Insight:** The massive gap in accuracy compared to GaV (**between -20% and -30%**) demonstrates that LLMs cannot reliably infer column semantics without grounding in actual data statistics. The lack of a feedback loop results in "semantic hallucinations," where the model confidentially asserts incorrect meanings based on superficial naming patterns.
 
 #### 2. The Hallucination Problem (Description Only)
 * **Configuration:** *Description ON, Verifier OFF*
-* **Observation:** Injecting statistical summaries (distributions, min/max values) significantly improves accuracy (**77%**) compared to the baseline.
+* **Observation:** Injecting statistical summaries (distributions, min/max values) significantly improves accuracy (**77%** with GPT-5) compared to the baseline.
 * **Technical Insight:** While the "Description" component provides necessary context, the absence of an execution-based verifier means the system cannot confirm its intuitions. The model creates a coherent narrative around the data but lacks the mechanism to perform **empirical validation**, leading to errors in ambiguous cases (e.g., distinguishing between *Created Date* vs *Updated Date* without checking value monotonicity).
 
 #### 3. The Cost of "Cold-Start" Verification (Verifier Only)
 * **Configuration:** *Description OFF, Verifier ON*
-* **Observation:** This configuration provides a massive accuracy boost (**81%**) but at the highest computational cost in terms of time (**583s**) and output tokens (**135k**).
+* **Observation:** This configuration provides a massive accuracy boost (**81%** with GPT-5) but at the highest computational cost in terms of time (**583s** with GPT-5) and output tokens (**135k** with GPT-5).
 * **Technical Insight:** Without a preliminary description, the Verifier operates in a "Cold-Start" mode. The initial hypotheses are often weak or generic. Our log analysis reveals that this forces the **Data Analyst** agent into multiple costly **Refinement Loops**: the Verifier rejects the initial guess, requests new code execution, and iterates. This "trial-and-error" process explains the high output token consumption and extended execution time.
 
 #### 4. The "Warm-Start" Synergy (Ours - Full Architecture)
 * **Configuration:** *Description ON, Verifier ON*
-* **Observation:** Activating both components achieves the state-of-the-art accuracy (**87%**) while actually *reducing* execution time compared to the "Verifier Only" setup (~509s vs 583s for GPT-5).
-* **Technical Insight:** This result highlights a critical efficiency trade-off. Although the Description component increases the input context overhead (**~178k input tokens**), it acts as a **"Warm-Start" mechanism**. It primes the Generator with a high-quality context, leading to a much stronger initial hypothesis. Consequently, the Verifier accepts the hypothesis with significantly fewer refinement steps and fewer calls to the Data Analyst code interpreter. The initial investment in input tokens pays off by preventing expensive iterative corrections.
+* **Observation:** Activating both components achieves the state-of-the-art accuracy (**87%** with GPT-5) while actually *reducing* execution time compared to the "Verifier Only" setup (~509s vs 583s for GPT-5).
+* **Technical Insight:** This result highlights a critical efficiency trade-off. Although the Description component increases the input context overhead (**~178k input tokens** with GPT-5), it acts as a **"Warm-Start" mechanism**. It primes the Generator with a high-quality context, leading to a much stronger initial hypothesis. Consequently, the Verifier accepts the hypothesis with significantly fewer refinement steps and fewer calls to the Data Analyst code interpreter. The initial investment in input tokens pays off by preventing expensive iterative corrections.
 
 ### 💡 Conclusion: Architectural Robustness
 The full GaV architecture offers the optimal balance between precision and computational overhead.
@@ -293,18 +293,13 @@ To illustrate the specific contribution of each component, we present a comparis
 Following the feedback from the ICDE review process, we provide an extended analysis of specific architectural behaviors, hyperparameter sensitivity, and the ablation of the verification components.
 
 ### 1. Sensitivity of Verification Rounds (`max_steps`)
-A key hyperparameter in GaV is the maximum number of refinement rounds allowed for the Verifier agent. Our experiments show that this is not a static parameter but depends on two factors: **Model Personality** and **Context Quality**.
+A key hyperparameter in GaV is the maximum number of refinement rounds allowed for the Verifier agent. Our log analysis reveals that this is not a static parameter but depends heavily on **Model Personality** and **Context Quality**.
 
-* **Model Sensitivity (Skepticism Level):** We observed that "Reasoner" models or those with specific fine-tuning (e.g., Qwen-Plus Thinking) exhibit higher skepticism. They require more iteration steps to accept a hypothesis compared to models like Qwen-Plus, which tend to converge faster.
-* **Role of Description (The "Warm-Start"):** When the *Description* component is disabled, the initial hypotheses are often generic. This forces the Verifier to reject them frequently, increasing the number of rounds needed to reach a conclusion.
+* **Model Sensitivity (Skepticism Level):** We observed distinct behavioral patterns across model families. **GPT-5** tends to be more decisive, maintaining a relatively low rejection rate of **~7.1%**. In contrast, **Qwen-Plus-Thinking** exhibits significantly higher "skepticism," with a rejection rate of **23.9%**. This indicates that specific "reasoner" models are more prone to challenging hypotheses, requiring a higher `max_steps` setting to allow for rigorous iterative verification.
+
+* **Role of Description (The "Warm-Start"):** The *Description* component is critical for efficient convergence. When disabled, the Verifier is forced to reject generic guesses much more frequently. This effect is particularly visible not only in GPT-5 from **7.1%** (with description) to **10%** (without description) but especially in skeptical models. For Qwen-Plus-Thinking, the rejection rate nearly doubles from **23.9%** (with description) to **30.7%** (without description), confirming that the "warm-start" context dramatically reduces the need for costly refinement loops.
 
 > **Guideline:** This parameter should be tuned based on the backbone. Increase `max_steps` for skeptical models or when operating in "Blind Mode" (no description).
-
-![Placeholder: Chart showing Average Rejection Rate - GPT Family vs Qwen Family]
-*(Figure: Comparative rejection rates showing higher iteration needs for Qwen models)*
-
-![Placeholder: Chart showing Rejection Rate - With Description vs Without Description]
-*(Figure: Impact of description on convergence speed)*
 
 ### 2. The "Easy" vs. "Hard" Classification Dilemma
 The Verifier agent autonomously decides whether a verification task is "Easy" (solvable via metadata/reflection) or "Hard" (requires Python code execution).
