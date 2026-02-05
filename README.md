@@ -134,6 +134,9 @@ The annotations are balanced across the ABCU ontology, ensuring the model is tes
 | **Temporal Scope** | **12.4%** | Time validity and granularity |
 | **Aggregation/Derivation** | **10.4%** | Formulas and calculated fields from other attributes |
 
+![Annotations distribution per dataset](industrial_benchmark_coverage_analysis.png)
+*(Figure: Annotations distribution per dataset of the Industrial Benchmark)*
+
 
 ### 🏛️ Municipal Subset Statistics (NYC Open Data)
 
@@ -166,6 +169,9 @@ Unlike the industrial subset which focuses on values and types, the civic subset
 | **Temporal Scope** | **13.1%** |
 | **Aggregation/Derivation** | **7.3%** |
 | **Row Context** | **4.4%** |
+
+![Annotations distribution per dataset](original_benchmark_coverage_analysis.png)
+*(Figure: Annotations distribution per dataset of the NYC Open Data Benchmark)*
 
 ---
 
