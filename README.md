@@ -110,7 +110,7 @@ To validate GaV in enterprise scenarios, we analyzed the specific properties of 
 | Metric | Value | Interpretation |
 | :--- | :--- | :--- |
 | **Total Datasets** | 20 | Diverse industrial verticals |
-| **Annotated Attributes** | 206 | Columns with human-verified ground truth for semantic verification |
+| **Total Annotations** | 212 | Columns with human-verified ground truth for semantic verification |
 | **Avg. Description Length** | ~35 words | High semantic density (requires rich explanations) |
 
 #### 🌐 Domain Coverage
@@ -143,7 +143,7 @@ The core of our benchmark comprises 26 datasets from the NYC Open Data portal. T
 | Metric | Value | Interpretation |
 | :--- | :--- | :--- |
 | **Total Datasets** | 26 | Wide variety of civic topics |
-| **Annotated Attributes** | 283 | Columns with human-verified ground truth for semantic verification |
+| **Total Annotations** | 314 | Columns with human-verified ground truth for semantic verification |
 | **Avg. Description Length** | **~66 words** | Extremely high verbosity (descriptions often include legal/administrative context) |
 
 #### 🌐 Domain Coverage
@@ -157,14 +157,15 @@ The civic benchmark covers the critical infrastructure of a metropolis:
 #### 🧠 Semantic Aspect Distribution
 Unlike the industrial subset which focuses on values and types, the civic subset requires strong **Entity Interpretation** (understanding what a "Zone" or "District" effectively means in a city context).
 
-| Semantic Aspect | Share | Description |
+| Semantic Aspect | Share ||
 | :--- | :--- | :--- |
-| **Entity Meaning** | **23.9%** | Mapping generic codes to real-world entities (e.g., *"Is '1' Manhattan or Bronx?"*) |
-| **Value Semantics** | **18.8%** | Interpreting specific administrative codes and flags |
-| **Value Representation** | **17.8%** | Handling non-standard formats (e.g., coordinates, weird date strings) |
-| **Relational Context** | **14.7%** | Linking datasets (e.g., Schools to Districts) |
-| **Temporal Scope** | **13.1%** | Validity windows of permits and licenses |
-| **Aggregation/Derivation** | **7.3%** | Understanding calculated metrics (e.g., *Total Students*) |
+| **Entity Meaning** | **23.9%** ||
+| **Value Semantics** | **18.8%** ||
+| **Value Representation** | **17.8%** ||
+| **Relational Context** | **14.7%** ||
+| **Temporal Scope** | **13.1%** ||
+| **Aggregation/Derivation** | **7.3%** ||
+| **Row Context** | **4.4%** ||
 
 ---
 
