@@ -272,6 +272,11 @@ Our ablation study reveals critical insights into the interplay between Large La
 * **Observation:** Activating both components achieves the state-of-the-art accuracy (**87%** with GPT-5) while actually *reducing* execution time compared to the "Verifier Only" setup (~509s vs 583s for GPT-5).
 * **Technical Insight:** This result highlights a critical efficiency trade-off. Although the Description component increases the input context overhead (**~178k input tokens** with GPT-5), it acts as a **"Warm-Start" mechanism**. It primes the Generator with a high-quality context, leading to a much stronger initial hypothesis. Consequently, the Verifier accepts the hypothesis with significantly fewer refinement steps and fewer calls to the Data Analyst code interpreter. The initial investment in input tokens pays off by preventing expensive iterative corrections.
 
+### Performance per Domain
+
+![GaV performance per dataset domain](d9ced130-1.png)
+*(Figure: GaV performance per dataset domain)*
+
 ### 💡 Conclusion: Architectural Robustness
 The full GaV architecture offers the optimal balance between precision and computational overhead.
 
