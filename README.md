@@ -290,7 +290,7 @@ To illustrate the specific contribution of each component, we present a comparis
 
 #### 📍 Context & Challenge
 * **Domain:** Financial Regulation (US Banking).
-* **Dataset Structure:** A "wide-format" index of **Branches** (physical offices). The FDIC monitors institutions at three levels: (1) Holding Company $\to$ (2) **Institution** (Bank) $\to$ (3) **Branch**.
+* **Dataset Structure:** A "wide-format" index of **Branches** (physical offices). The FDIC monitors institutions at three levels: (1) **Holding Company** $\to$ (2) **Institution** (Bank) $\to$ (3) **Branch**.
 * **Target Column:** `FDIC_INSTITUTION_CERTIFICATE_NUMBER`
 * **The Challenge:** The table represents *Branches*, but this column identifies the *Institution*. A naive model sees "ID/Number" and often mistakes it for the Branch's unique ID (Primary Key). The core difficulty lies in recognizing that this is a **grouping key** (Foreign Key) that repeats for every branch of the same bank.
 
