@@ -77,7 +77,7 @@
     [
       "VARIABLE",
       "Value Representation",
-      "Formatted as a 'slug' string derived strictly from 'VARIABLE_NAME'. Code analysis confirms that for 100% of rows, this value is exactly 'VARIABLE_NAME' with all spaces replaced by underscores."
+      "Formatted as a 'slug' string derived strictly from 'VARIABLE_NAME'. It is confirmed that for 100% of rows, this value is exactly 'VARIABLE_NAME' with all spaces replaced by underscores."
     ],
     [
       "VARIABLE_NAME",
@@ -234,7 +234,7 @@
     [
       "INSTITUTION_NAME",
       "Relational Context",
-      "The legal name of the financial institution. Code analysis reveals a many-to-one relationship with 'FDIC_INSTITUTION_ID' is NOT strictly 1:1 in the reverse direction (Name -> ID is not unique), implying that different institutions (IDs) might share the same name (e.g., generic names like 'First State Bank')."
+      "The legal name of the financial institution. It is confirmed to be a many-to-one relationship with 'FDIC_INSTITUTION_ID' is NOT strictly 1:1 in the reverse direction (Name -> ID is not unique), implying that different institutions (IDs) might share the same name (e.g., generic names like 'First State Bank')."
     ],
     [
       "ACQUIRED_DATE",
@@ -260,7 +260,7 @@
     [
       "DISASTER_ID",
       "Relational Context",
-      "Grouping identifier linking multiple area records to a single disaster event. Code analysis confirms this ID is not unique (found in duplicates), serving as a Foreign Key to the master Disaster table."
+      "Grouping identifier linking multiple area records to a single disaster event. It is confirmed this ID is not unique (found in duplicates), serving as a Foreign Key to the master Disaster table."
     ],
     [
       "STATE_GEO_ID",
@@ -270,7 +270,7 @@
     [
       "COUNTY_GEO_ID",
       "Aggregation and Derivation",
-      "Hierarchically derived from 'STATE_GEO_ID'. Code analysis confirms that in 97.2% of cases, the 5-digit sequence in this column (e.g., 'geoId/20083') starts with the 2-digit sequence found in 'STATE_GEO_ID' (e.g., 'geoId/20'), establishing a strict parent-child geographic relationship."
+      "Hierarchically derived from 'STATE_GEO_ID'. It is confirmed that in 97.2% of cases, the 5-digit sequence in this column (e.g., 'geoId/20083') starts with the 2-digit sequence found in 'STATE_GEO_ID' (e.g., 'geoId/20'), establishing a strict parent-child geographic relationship."
     ],
     [
       "DECLARED_PROGRAMS_DETAILED",
@@ -367,7 +367,7 @@
     [
       "CURRENT_RATIO",
       "Aggregation and Derivation",
-      "Financial ratio derived as 'TOTAL_CURRENT_ASSETS' divided by 'TOTAL_CURRENT_LIABILITIES'. Code execution confirms this relationship holds for 100% of rows where liabilities are non-zero."
+      "Financial ratio derived as 'TOTAL_CURRENT_ASSETS' divided by 'TOTAL_CURRENT_LIABILITIES'. It is confirmed that this relationship holds for 100% of rows where liabilities are non-zero."
     ],
     [
       "DEBT_RATIO",
@@ -428,7 +428,7 @@
     [
       "DATASET_NAME",
       "Value Representation",
-      "Verified to be a valid JSON-formatted string containing dataset identifiers. Unlike the prediction of a fixed 3-segment schema, code execution confirms variable complexity: 5-segment identifiers dominate (78%), followed by 3-segment (19%) and others ranging from 1 to 6 segments."
+      "Verified to be a valid JSON-formatted string containing dataset identifiers. It is confirmed to have variale complexity: 5-segment identifiers dominate (78%), followed by 3-segment (19%) and others ranging from 1 to 6 segments."
     ],
     [
       "FREQUENCY",
@@ -509,7 +509,7 @@
         [
             "CASES",
             "Entity or Attribute Meaning",
-            "Cumulative count of events (stock variable). While designed to be monotonic increasing, forensic analysis reveals negative daily differences in 5.4% of records, indicating frequent historical data corrections or adjustments."
+            "Cumulative count of events (stock variable). While designed to be monotonic increasing, it reveals negative daily differences in 5.4% of records, indicating frequent historical data corrections or adjustments."
         ],
         [
             "DATE",
@@ -550,7 +550,7 @@
         [
             "WSI",
             "Entity or Attribute Meaning",
-            "Represents the WIGOS (WMO Integrated Global Observing System) Station Identifier. Code execution confirms it is an exact, redundant copy of the 'STATION_ID' column in 100% of rows (Correlation = 1.0). It serves as the official, permanent KNMI identifier for each of the 25 operational weather stations, specifying the physical observation location regardless of instrumentation changes."
+            "Represents the WIGOS (WMO Integrated Global Observing System) Station Identifier. It is confirmed to be an exact, redundant copy of the 'STATION_ID' column in 100% of rows (Correlation = 1.0). It serves as the official, permanent KNMI identifier for each of the 25 operational weather stations, specifying the physical observation location regardless of instrumentation changes."
         ],
         [
             "WSI",
@@ -697,7 +697,7 @@
         [
     "COD_VAR",
     "Relational Context",
-    "Acts as the primary discriminator key (Category Anchor) for the dataset structure, organizing rows into coherent semantic groups (e.g., 'IRIS', 'COM', 'DEP'). Forensic analysis reveals a highly skewed distribution: the value 'IRIS' repeats for over half of the rows, followed by 'COM', effectively framing the dataset as an enumeration of geographic units, while numerous other values appear only as singleton metadata definitions. Each `COD_VAR` value exhibits strict internal consistency with respect to `LONG_VAR` and `TYPE_VAR`, while intentionally allowing variation in `COD_MOD` and `LIB_MOD`, confirming its role as a semantic grouping mechanism rather than a structural or relational constraint. No evidence supports its use as a foreign key, ordering field, or dependency determinant."
+    "Acts as the primary discriminator key (Category Anchor) for the dataset structure, organizing rows into coherent semantic groups (e.g., 'IRIS', 'COM', 'DEP'). It reveals a highly skewed distribution: the value 'IRIS' repeats for over half of the rows, followed by 'COM', effectively framing the dataset as an enumeration of geographic units, while numerous other values appear only as singleton metadata definitions. Each `COD_VAR` value exhibits strict internal consistency with respect to `LONG_VAR` and `TYPE_VAR`, while intentionally allowing variation in `COD_MOD` and `LIB_MOD`, confirming its role as a semantic grouping mechanism rather than a structural or relational constraint. No evidence supports its use as a foreign key, ordering field, or dependency determinant."
 ],
         [
     "COD_MOD",
@@ -734,7 +734,7 @@
         [
             "HASH",
             "Entity or Attribute Meaning",
-            "Serves as the rigorous Primary Key for the dataset. Code analysis confirms it is 100% unique (500,000 distinct values) and non-null, acting as a synthetic surrogate key distinct from the 'ID' column."
+            "Serves as the rigorous Primary Key for the dataset. It is confirmed to be 100% unique (500,000 distinct values) and non-null, acting as a synthetic surrogate key distinct from the 'ID' column."
         ],
         [
             "HASH",
@@ -954,7 +954,7 @@
             [
             "ATERIO_INDUSTRIAL_PROJECT_UID",
             "Entity or Attribute Meaning",
-            "Acts as the immutable Primary Key for the project entities. Forensic analysis confirms 100% uniqueness across all records. The format is verified as a standard UUID Version 4 (36-character hexadecimal string with hyphens), serving as the central join key for this dataset."
+            "Acts as the immutable Primary Key for the project entities. It is confirmed 100% uniqueness across all records. The format is verified as a standard UUID Version 4 (36-character hexadecimal string with hyphens), serving as the central join key for this dataset."
             ],
             [
             "PCT_CONSTRUCTION_STATUS",
@@ -1091,7 +1091,7 @@
         [
           "SALARY_FROM",
           "Derivation and Aggregation",
-          "Represents the annualized lower bound of the salary, standardized to USD. Forensic analysis of 'ORIGINAL_SALARY_FROM' and 'ORIGINAL_PAY_PERIOD' confirms this value is derived by annualizing the local pay (e.g., Hourly × 2080) and converting it to USD."
+          "Represents the annualized lower bound of the salary, standardized to USD. 'ORIGINAL_SALARY_FROM' and 'ORIGINAL_PAY_PERIOD' confirms this value is derived by annualizing the local pay (e.g., Hourly × 2080) and converting it to USD."
         ],
         [
           "SKILLS",
@@ -1136,7 +1136,7 @@
         [
           "VARIABLE",
           "Aggregation and Derivation",
-          "Strictly derived from 'VARIABLE_NAME' via a slugification process. Code analysis confirms a pattern where spaces in 'VARIABLE_NAME' are replaced by underscores and special characters (like colons or commas) are either preserved or escaped, ensuring a URL-safe format."
+          "Strictly derived from 'VARIABLE_NAME' via a slugification process. It is confirmed a pattern where spaces in 'VARIABLE_NAME' are replaced by underscores and special characters (like colons or commas) are either preserved or escaped, ensuring a URL-safe format."
         ],
         [
           "VARIABLE_NAME",
