@@ -172,7 +172,7 @@ Unlike the industrial subset which focuses on values and types, the civic subset
 | **Aggregation/Derivation** | **7.3%** |
 | **Row Context** | **4.4%** |
 
-![Annotations distribution per dataset](original_benchmark_coverage_analysis.png)
+![Annotations distribution per dataset](imgs/original_benchmark_coverage_analysis.png)
 *(Figure: Annotations distribution per dataset of the NYC Open Data Benchmark)*
 
 ---
@@ -181,7 +181,7 @@ Unlike the industrial subset which focuses on values and types, the civic subset
 
 The GaV system operates through a multi-agent architecture designed to mimic the reasoning process of a human data engineer. The workflow is divided into two sequential phases.
 
-![GaV Architecture](LAST_Methodology_Chart.drawio.png)
+![GaV Architecture](imgs/LAST_Methodology_Chart.drawio.png)
 *(Figure: Overview of the Guess-and-Verification Protocol)*
 
 ### Phase 1: Context Initialization
@@ -276,7 +276,7 @@ Our ablation study reveals critical insights into the interplay between Large La
 
 ### Performance per Domain
 
-![GaV performance per dataset domain](d9ced130-1.png)
+![GaV performance per dataset domain](imgs/d9ced130-1.png)
 *(Figure: GaV performance per dataset domain)*
 
 ### 💡 Conclusion: Architectural Robustness
