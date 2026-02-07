@@ -136,7 +136,7 @@ The annotations are balanced across the ABCU ontology, ensuring the model is tes
 | **Temporal Scope** | **12.4%** | Time validity and granularity |
 | **Aggregation/Derivation** | **10.4%** | Formulas and calculated fields from other attributes |
 
-![Annotations distribution per dataset](industrial_benchmark_coverage_analysis.png)
+![Annotations distribution per dataset](imgs/industrial_benchmark_coverage_analysis.png)
 *(Figure: Annotations distribution per dataset of the Industrial Benchmark)*
 
 
