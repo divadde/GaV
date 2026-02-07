@@ -91,17 +91,26 @@ Each record includes:
 
 ## ✍️ Human Annotation Process
 
-All statements were produced through a **manual annotation workflow** by trained annotators.  
-Annotators analyzed:
-- the schema and metadata of the dataset,
-- column statistics (e.g., distribution, frequency, data type), using specific tools of data analysis
-- and representative row samples.
+The ground truth for this benchmark was established through a rigorous **manual annotation workflow** performed by domain experts. To ensure high-quality semantic profiles, the process followed a strict protocol based on the guidelines defined in `Column Meaning Ontology.pdf`.
 
-Each annotation expresses a **verifiable fact** about the attribute’s semantics, grounded in the actual dataset content.  
-All statements underwent review for **semantic correctness, clarity, and grounding**. In particular, each fact of a particular aspect for a particular attribute, follows a kind of description of definition, context meaning and statistic proof. Annotators followed the guidelines presented in ```Column Meaning Ontology.pdf```.
+### 🛠️ The Workflow
+Annotators did not rely on surface-level observation; instead, they utilized dedicated data analysis tools to inspect the dataset from three perspectives:
+1.  **Schema & Metadata Analysis:** Examining table structures, inherent constraints, and available documentation.
+2.  **Statistical Profiling:** Analyzing column distributions, frequency patterns, null rates, and data types to infer structural properties.
+3.  **Row Sampling:** Manually inspecting representative data samples to understand the context of specific values.
 
-(Nota bene: Per alcuni rari casi di etichettatura in NYC Open Data, sono stati inseriti dei marker [PRIOR_KNOWLEDGE], per identificare dei facts scovati dagli annotatori più difficili e che riguardano una conoscenza preliminare profonda del dominio del dataset e di quell'attributo.)
+### 📝 Annotation Structure & Standards
+Each annotation is formulated as a **verifiable fact** regarding the attribute's semantics, strictly grounded in the actual data. To ensure completeness, every generated fact follows a tripartite structure:
+* **Definition:** A clear statement of what the attribute represents.
+* **Contextual Meaning:** How the attribute relates to the specific domain or business logic.
+* **Statistical Proof:** Empirical evidence (e.g., uniqueness, specific value patterns) that supports the definition.
 
+**Quality Assurance:** All statements underwent a secondary review phase to guarantee **semantic correctness, clarity, and evidence grounding**.
+
+> **⚠️ Special Note: `[PRIOR_KNOWLEDGE]` Markers**
+> In specific instances within the **NYC Open Data** subset, you may encounter the tag `[PRIOR_KNOWLEDGE]`.
+> * **Purpose:** This marker identifies complex semantic facts that cannot be inferred solely from the data distribution but require **deep, pre-existing domain expertise** (e.g., specific municipal codes or legacy administrative acronyms).
+> * **Implication:** These cases represent the "hardest" tier of the benchmark, testing the model's ability to retrieve external knowledge rather than just profiling the data, for a future work.
 ---
 
 ### 🏭 Industrial Subset Statistics (Snowflake Source)
