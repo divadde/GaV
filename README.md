@@ -327,13 +327,24 @@ The Verifier agent autonomously decides whether a verification task is "Easy" (s
 * **Valid "Easy" Cases:** The "Easy" path is legitimate only when the hypothesis is trivial or directly verifiable against the statistical summary provided by the Description component (e.g., checking value ranges or null counts).
 
 ### 3. Ablation: Why "Reflection" is Not Enough
-We deeply investigated the necessity of the **Data Analyst** (Code Execution) compared to a simple "Reflection" mechanism (LLM self-correction without tools).
 
-* **Reflection (Verifier without Tools):** As established in recent literature, self-reflection helps reduce syntax errors and basic hallucinations. However, our ablation study confirms that for **Data Profiling**, reflection is insufficient. An LLM cannot "think" its way to the truth about a dataset's distribution or hidden constraints.
-* **Execution (Verifier with Data Analyst):** The ability to execute code allows the system to empirically validate specific constraints (e.g., *"Is this truly a Foreign Key?"*, *"Are dates strictly sequential?"*).
-    * *Result:* Disabling the Data Analyst forces the system into a "Reflection-Only" mode, which fails to capture granular semantic details, reverting to the performance levels of the "Description Only" configuration.
- 
-I risultati qui presenti in tabella, confermano un leggero aumento delle performance rispetto alla solo componente descrittivo, ma performance in generale inferiori rispetto a utilizzare completamente il Data-Analyst:
+We investigated the necessity of the **Data Analyst** (Code Execution) by comparing the full GaV pipeline against a "Reflection-Only" baseline (LLM self-correction without tools).
+
+* **Reflection (Verifier without Tools):** Our ablation study shows that self-reflection offers a **slight performance improvement** over the "Description Only" baseline. By revisiting its own logic, the LLM can smooth out internal inconsistencies and refine ambiguous descriptions. However, this approach hits a "verification ceiling": an LLM cannot purely "think" its way to the truth about a dataset's actual distribution or hidden constraints without inspecting the data.
+
+* **Execution (Verifier with Data Analyst):** The full GaV system leverages the Data Analyst to **empirically validate** hypotheses through code (e.g., *"Is this truly a Foreign Key?"*, *"Do these dates strictly follow a sequence?"*).
+    * **Result:** While Reflection improves the *plausibility* of the semantic profile, only the Data Analyst ensures its *veracity*. The full architecture (with code execution) consistently outperforms the Reflection-Only mode in complex semantic tasks, demonstrating that semantic reasoning must be grounded in actual data execution to be fully reliable.
+
+#### Table: Impact of GaV Verification on Complex Semantic Aspects
+
+| Model Family | Semantic Aspect | Baseline Accuracy (Reflection) | GaV Accuracy (Execution) | Improvement |
+| :--- | :--- | :--- | :--- | :--- |
+| **GPT-5** | Entity or Attribute Meaning | 76.5% | **89.7%** | **+13.2%** |
+| **GPT-5** | Value Semantics | 90.7% | **93.1%** | **+2.5%** |
+| **GPT-5 Mini** | Entity or Attribute Meaning | 75.6% | **76.7%** | **+1.1%** |
+| **GPT-5 Mini** | Value Semantics | 78.3% | **91.0%** | **+12.7%** |
+| **GPT-5 Nano** | Entity or Attribute Meaning | 68.4% | **76.0%** | **+7.6%** |
+| **GPT-5 Nano** | Value Semantics | 78.3% | **84.4%** | **+6.1%** |
 
 ---
 
