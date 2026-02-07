@@ -1,7 +1,7 @@
 # ABCU Benchmark — Aspect-Based Column Understanding
 
 **ABCU (Aspect-Based Column Understanding)** is a benchmark created for the homonymous paper introducing this novel task.  
-ABCU focuses on the **semantic interpretation of table attributes**, aiming to uncover what each column represents in the real world and how its values are expressed, aggregated, or related to others.
+ABCU focuses on the **semantic interpretation of table attributes**, aiming to uncover what each column represents in the real world and how its values are expressed, aggregated, or related to others, according to specified **semantic aspects**.
 
 ---
 
@@ -19,7 +19,7 @@ The benchmark allows researchers to evaluate and develop systems capable of gene
 To ensure a rigorous evaluation relevant to the **ICDE Industrial Track**, we constructed a composite benchmark spanning two distinct data distributions. This dual-source approach addresses the need for testing both "in-the-wild" dirty data and structured industrial schemas.
 
 ### 1. Municipal & Civic Domain (NYC Open Data)
-The core of the benchmark is derived from the **NYC Open Data** portal. This subset represents the "Socio-Science" and public administration domain, challenging the model with high ambiguity, messy formatting, and diverse civic topics.
+One part of the benchmark is derived from the **NYC Open Data** portal. This subset represents the "Socio-Science" and public administration domain, challenging the model with high ambiguity, messy formatting, and diverse civic topics.
 
 * **Original Portal:** [NYC Open Data](https://opendata.cityofnewyork.us/)
 * **Curated Subset (ABCU):** [📂 Download Benchmark Data](https://drive.google.com/drive/folders/1emdGsmkhdfj8Da3ozuYLvMQpDbfgamAD?usp=sharing)
@@ -35,16 +35,16 @@ To expand domain coverage beyond civic data and test applicability in enterprise
 ## 📂 Repository Structure
 
 ```
-Column Meaning Ontology.pdf        # definitions and examples of the 7 ontology types
+Column Meaning Ontology.pdf        # definitions and examples of the 7 aspect types
 v2_final_attributes_json.json              # human-annotated benchmark data on NYC Open Data
 industrial_benchmark_attributes.json        #human-annotated benchmark data from Snowflake source
 ```
 
 ---
 
-## 📘 Ontology Facets
+## 📘 Aspect Facets
 
-Each attribute is annotated according to one of **seven ontology facets**, each describing a different semantic aspect:
+Each attribute is annotated according to one of **seven aspects facets**, each describing a different semantic type:
 
 1. **Entity or Attribute Meaning** – what real-world entity, event, or property the column represents.  
 2. **Value Representation** – the syntactic or format conventions of values (e.g., date pattern, measurement unit).  
@@ -94,11 +94,13 @@ Each record includes:
 All statements were produced through a **manual annotation workflow** by trained annotators.  
 Annotators analyzed:
 - the schema and metadata of the dataset,
-- column statistics (e.g., distribution, frequency, data type),
+- column statistics (e.g., distribution, frequency, data type), using specific tools of data analysis
 - and representative row samples.
 
-Each annotation expresses a **verifiable hypothesis** about the attribute’s semantics, grounded in the actual dataset content.  
-All statements underwent review for **semantic correctness, clarity, and grounding**.
+Each annotation expresses a **verifiable fact** about the attribute’s semantics, grounded in the actual dataset content.  
+All statements underwent review for **semantic correctness, clarity, and grounding**. In particular, each fact of a particular aspect for a particular attribute, follows a kind of description of definition, context meaning and statistic proof. Annotators followed the guidelines presented in ```Column Meaning Ontology.pdf```.
+
+(Nota bene: Per alcuni rari casi di etichettatura in NYC Open Data, sono stati inseriti dei marker [PRIOR_KNOWLEDGE], per identificare dei facts scovati dagli annotatori più difficili e che riguardano una conoscenza preliminare profonda del dominio del dataset e di quell'attributo.)
 
 ---
 
