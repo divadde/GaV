@@ -335,20 +335,18 @@ We deeply investigated the necessity of the **Data Analyst** (Code Execution) co
  
 I risultati qui presenti in tabella, confermano un leggero aumento delle performance rispetto alla solo componente descrittivo, ma performance in generale inferiori rispetto a utilizzare completamente il Data-Analyst:
 
-
-      
 ---
 
 ## 🎯 Intended Use
 
-ABCU is intended for evaluating and developing systems that perform:
-- column-level meaning discovery,
-- ontology-based reasoning on tabular data,
-- LLM-based hypothesis generation and validation (e.g., multi-agent reasoning systems).
+ABCU is designed to evaluate **neuro-symbolic** and **agentic** systems focused on deep tabular interpretation. Unlike traditional classification benchmarks, it targets systems capable of:
 
-It supports research in:
-- data semantics and table understanding,  
-- schema mapping and ontology alignment,  
-- explainable AI for data profiling and cataloging.
+* **Automated Semantic Profiling:** Moving beyond simple type detection (CSTD) to generate rich, verifiable semantic descriptions.
+* **Evidence-Based Reasoning:** Testing LLM architectures on their ability to ground hypotheses in empirical data (e.g., via the *Guess-and-Verify* paradigm).
+* **Neuro-Symbolic Execution:** Evaluating agents that combine language models with code execution tools (Data Analysts) to validate claims.
+
+It explicitly supports research in:
+* **Table Understanding & Data Integration:** Disambiguating complex schemas for automated data cataloging.
+* **Explainable Data Analytics:** Producing transparent, evidence-backed insights for industrial data lakes.
 
 
