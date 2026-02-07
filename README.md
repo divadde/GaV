@@ -212,6 +212,14 @@ This **Generate $\rightarrow$ Verify $\rightarrow$ Refine** loop ensures that ev
 
 ## 📊 Experimental Results
 
+| Configuration | Model | Accuracy | Input Tokens | Output Tokens | Time |
+|:---|:---|:---:|:---:|:---:|:---:|
+| **GaV (Ours)** | gpt-5-nano | 85.3% | 244.2K | 240.1K | 453.2s |
+| | gpt-5-mini | 88.6% | 194.9K | 87.4K | 437.4s |
+| | gpt-5 | **92.2%** | **142.0K** | 141.8K | 632.2s |
+| | qwen3-plus | 86.7% | 186.2K | **15.9K** | **77.5s** |
+| | qwen3-max | 90.4% | 144.3K | 21.5K | 148.0s |
+
 We evaluated **GaV** on an industrial benchmark of real-world datasets from Snowflake source and the civic domain benchmark of NYC Open Data source, and from  comparing different LLM backbones and architectural configurations. The table below reports the average performance metrics extracted from our experiments.
 
 ### 🤖 GPT Family Performance
