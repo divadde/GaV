@@ -237,35 +237,35 @@ Moreover, we evaluated **GaV** on an industrial benchmark of real-world datasets
 
 | Configuration | Model | Accuracy | Input Tokens | Output Tokens | Time |
 |:---|:---|:---:|:---:|:---:|:---:|
-| **Vanilla** (Direct Prompt) | gpt-5 | 59.0% | 32k | 9k | 42s |
-| | gpt-5-mini | 55.0% | 32k | 5k | 16s |
-| | gpt-5-nano | 52.0% | 32k | 12k | 22s |
-| **Description Only** (No Verifier) | gpt-5 | 77.0% | 85k | 39k | 167s |
-| | gpt-5-mini | 75.0% | 92k | 24k | 67s |
-| | gpt-5-nano | 65.0% | 90k | 51k | 78s |
-| **Verifier Only** (No Description) | gpt-5 | 81.0% | 117k | 135k | 583s |
-| | gpt-5-mini | 76.0% | 140k | 74k | 305s |
-| | gpt-5-nano | 66.0% | 132k | 176k | 415s |
-| **GaV (Ours)** | **gpt-5** | **87.0%** | **178k** | **163k** | **508s** |
-| | **gpt-5-mini** | **82.0%** | **202k** | **95k** | **305s** |
-| | **gpt-5-nano** | **72.0%** | **201k** | **221k** | **399s** |
+| **Vanilla** (Direct Prompt) | gpt-5 | 62.1% | 32k | 9k | 42s |
+| | gpt-5-mini | 58.4% | 32k | 5k | 16s |
+| | gpt-5-nano | 55.2% | 32k | 12k | 22s |
+| **Description Only** (No Verifier) | gpt-5 | 77.3% | 85k | 39k | 167s |
+| | gpt-5-mini | 75.4% | 92k | 24k | 67s |
+| | gpt-5-nano | 67.0% | 90k | 51k | 78s |
+| **Verifier Only** (No Description) | gpt-5 | 81.5% | 117k | 135k | 583s |
+| | gpt-5-mini | 77.0% | 140k | 74k | 305s |
+| | gpt-5-nano | 67.9% | 132k | 176k | 415s |
+| **GaV (Ours)** | **gpt-5** | **88.2%** | **178k** | **163k** | **508s** |
+| | **gpt-5-mini** | **84.1%** | **202k** | **95k** | **305s** |
+| | **gpt-5-nano** | **78.6%** | **201k** | **221k** | **399s** |
 
 ### 🧠 Qwen Family Performance
 
 | Configuration | Model | Accuracy | Input Tokens | Output Tokens | Time |
 |:---|:---|:---:|:---:|:---:|:---:|
-| **Vanilla** (Direct Prompt) | qwen-plus | 42.0% | 36k | 2k | 5s |
-| | qwen-plus (thinking) | 53.0% | 36k | 13k | 51s |
-| | qwen3-max | 43.0% | 36k | 1k | 7s |
-| **Description Only** (No Verifier) | qwen-plus | 56.0% | 69k | 3k | 20s |
-| | qwen-plus (thinking) | 68.0% | 80k | 40k | 173s |
-| | qwen3-max | 59.0% | 67k | 3k | 34s |
-| **Verifier Only** (No Description) | qwen-plus | 57.0% | 135k | 34k | 101s |
-| | qwen-plus (thinking) | 71.0% | 130k | 183k | 531s |
-| | qwen3-max | 59.0% | 122k | 25k | 151s |
-| **GaV (Ours)** | **qwen-plus** | **61.0%** | **168k** | **36k** | **126s** |
-| | **qwen-plus (thinking)**| **75.0%** | **169k** | **186k** | **480s** |
-| | **qwen3-max** | **63.0%** | **153k** | **26k** | **209s** |
+| **Vanilla** (Direct Prompt) | qwen-plus | 53.4% | 36k | 2k | 5s |
+| | qwen-plus (thinking) | 59.3% | 36k | 13k | 51s |
+| | qwen3-max | 57.1% | 36k | 1k | 7s |
+| **Description Only** (No Verifier) | qwen-plus | 63.2% | 69k | 3k | 20s |
+| | qwen-plus (thinking) | 71.0% | 80k | 40k | 173s |
+| | qwen3-max | 67.8% | 67k | 3k | 34s |
+| **Verifier Only** (No Description) | qwen-plus | 65.0% | 135k | 34k | 101s |
+| | qwen-plus (thinking) | 78.9% | 130k | 183k | 531s |
+| | qwen3-max | 77.6% | 122k | 25k | 151s |
+| **GaV (Ours)** | **qwen-plus** | **76.0%** | **168k** | **36k** | **126s** |
+| | **qwen-plus (thinking)**| **83.3%** | **169k** | **186k** | **480s** |
+| | **qwen3-max** | **81.0%** | **153k** | **26k** | **209s** |
 
 > **Note:** Metrics are averaged across the benchmark datasets. Time represents the end-to-end processing duration per dataset.
 
