@@ -275,22 +275,22 @@ Our ablation study reveals critical insights into the interplay between Large La
 
 #### 1. The Limitations of Direct Reasoning (Vanilla Baseline)
 * **Configuration:** *No Description, No Verifier (Direct Prompting)*
-* **Observation:** This baseline relies purely on semantic inference from column names and headers. While it is the most efficient in terms of resources (fastest time, lowest token usage), it yields the lowest accuracy (**~59%** with GPT-5).
-* **Technical Insight:** The massive gap in accuracy compared to GaV (**between -20% and -30%**) demonstrates that LLMs cannot reliably infer column semantics without grounding in actual data statistics. The lack of a feedback loop results in "semantic hallucinations," where the model confidentially asserts incorrect meanings based on superficial naming patterns.
+* **Observation:** This baseline relies purely on semantic inference from column names and headers. While it is the most efficient in terms of resources (fastest time, lowest token usage), it yields the lowest accuracy (**~62.1%** with GPT-5).
+* **Technical Insight:** The massive gap in accuracy compared to GaV (**between -22% and -26%**) demonstrates that LLMs cannot reliably infer column semantics without grounding in actual data statistics. The lack of a feedback loop results in "semantic hallucinations," where the model confidentially asserts incorrect meanings based on superficial naming patterns.
 
 #### 2. The Hallucination Problem (Description Only)
 * **Configuration:** *Description ON, Verifier OFF*
-* **Observation:** Injecting statistical summaries (distributions, min/max values) significantly improves accuracy (**77%** with GPT-5) compared to the baseline.
+* **Observation:** Injecting statistical summaries (distributions, min/max values) significantly improves accuracy (**77.3%** with GPT-5) compared to the baseline.
 * **Technical Insight:** While the "Description" component provides necessary context, the absence of an execution-based verifier means the system cannot confirm its intuitions. The model creates a coherent narrative around the data but lacks the mechanism to perform **empirical validation**, leading to errors in ambiguous cases (e.g., distinguishing between *Created Date* vs *Updated Date* without checking value monotonicity).
 
 #### 3. The Cost of "Cold-Start" Verification (Verifier Only)
 * **Configuration:** *Description OFF, Verifier ON*
-* **Observation:** This configuration provides a massive accuracy boost (**81%** with GPT-5) but at the highest computational cost in terms of time (**583s** with GPT-5) and output tokens (**135k** with GPT-5).
+* **Observation:** This configuration provides a massive accuracy boost (**81.5%** with GPT-5) but at the highest computational cost in terms of time (**583s** with GPT-5) and output tokens (**135k** with GPT-5).
 * **Technical Insight:** Without a preliminary description, the Verifier operates in a "Cold-Start" mode. The initial hypotheses are often weak or generic. Our log analysis reveals that this forces the **Data Analyst** agent into multiple costly **Refinement Loops**: the Verifier rejects the initial guess, requests new code execution, and iterates. This "trial-and-error" process explains the high output token consumption and extended execution time.
 
 #### 4. The "Warm-Start" Synergy (Ours - Full Architecture)
 * **Configuration:** *Description ON, Verifier ON*
-* **Observation:** Activating both components achieves the state-of-the-art accuracy (**87%** with GPT-5) while actually *reducing* execution time compared to the "Verifier Only" setup (~509s vs 583s for GPT-5).
+* **Observation:** Activating both components achieves the state-of-the-art accuracy (**88.2%** with GPT-5) while actually *reducing* execution time compared to the "Verifier Only" setup (~509s vs 583s for GPT-5).
 * **Technical Insight:** This result highlights a critical efficiency trade-off. Although the Description component increases the input context overhead (**~178k input tokens** with GPT-5), it acts as a **"Warm-Start" mechanism**. It primes the Generator with a high-quality context, leading to a much stronger initial hypothesis. Consequently, the Verifier accepts the hypothesis with significantly fewer refinement steps and fewer calls to the Data Analyst code interpreter. The initial investment in input tokens pays off by preventing expensive iterative corrections.
 
 ### Performance per Domain
