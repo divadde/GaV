@@ -301,7 +301,7 @@ Our ablation study reveals critical insights into the interplay between Large La
 ### 💡 Conclusion: Architectural Robustness
 The full GaV architecture offers the optimal balance between precision and computational overhead.
 
-Crucially, this architectural robustness **democratizes high-end performance**. As shown in the results, the medium-sized **GPT-5-mini** model using GaV achieves **82% accuracy**, outperforming the larger GPT-5 model in the "Description Only" (77%) and "Vanilla" (59%) configurations. This proves that a well-designed **Agentic Workflow** (Generate $\rightarrow$ Verify $\rightarrow$ Refine) can compensate for the lower raw reasoning capabilities of smaller, more cost-effective models.
+Crucially, this architectural robustness **democratizes high-end performance**. As shown in the results, the medium-sized **GPT-5-mini** model using GaV achieves **84.1% accuracy**, outperforming the larger GPT-5 model in the "Description Only" (77.3%) and "Vanilla" (62.1%) configurations. This proves that a well-designed **Agentic Workflow** (Generate $\rightarrow$ Verify $\rightarrow$ Refine) can compensate for the lower raw reasoning capabilities of smaller, more cost-effective models.
 
 ![Architectural Robustness mini](imgs/ablation_full_GPT_5_mini_GaV.png)
 ![Architectural Robustness nano](imgs/ablation_full_GPT_5_nano_GaV.png)
