@@ -370,6 +370,12 @@ We investigated the necessity of the **Data Analyst** (Code Execution) by compar
 
 ---
 
+## Verifier testing with TabFact benchmark
+
+Since verification is the core component of GaV, we separately evaluated the Verifier + Data Analyst subsystem on TabFact to test its ability to distinguish true from false table statements. Remarkably, the GaV Verification subsystem (using gpt-5-nano) achieved an accuracy of 92.8%, outperforming all existing state-of-the-art models, including DeBERTaV3 and PASTA, and even surpassing the human performance (92.1%) as shown in the table over TabFact GitHub https://github.com/wenhuchen/Table-Fact-Checking. This result confirms the high reliability and generality of the verification mechanism.
+
+---
+
 ## 🎯 Intended Use
 
 ABCU is designed to evaluate **neuro-symbolic** and **agentic** systems focused on deep tabular interpretation. Unlike traditional classification benchmarks, it targets systems capable of:
