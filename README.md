@@ -38,6 +38,8 @@ To expand domain coverage beyond civic data and test applicability in enterprise
 Column Meaning Ontology.pdf        # definitions and examples of the 7 aspect types
 v2_final_attributes_json.json              # human-annotated benchmark data on NYC Open Data
 industrial_benchmark_attributes.json        #human-annotated benchmark data from Snowflake source
+
+semforest+gav_tree.json                #Semantic Tree generated on biodivtab benchmark by the synergy of SemForest (https://github.com/golden-eggs-lab/semforest) and GaV
 ```
 
 ---
